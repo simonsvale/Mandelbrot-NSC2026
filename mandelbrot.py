@@ -22,7 +22,7 @@ def mandelbrot_point(c, max_iter):
     return iter_count
 
 
-def mandelbrot(x_interval, y_interval, N_x = 1024, N_y = 1024, max_iter = 100):
+def compute_mandelbrot_set(x_interval, y_interval, N_x = 1024, N_y = 1024, max_iter = 100):
 
     # Generate uniformly spaced values.
     grid_x = np.linspace(x_interval[0], x_interval[1], N_x)
@@ -49,17 +49,19 @@ if __name__ == "__main__":
     x_interval = [-2.0, 1.0]
     y_interval = [-1.5, 1.5]
 
-    x_res = 1024
-    y_res = 1024
+    x_res = 102
+    y_res = 102
     max_iter = 100
 
     t_s = time.time()
-    mandelbrot_grid = mandelbrot(x_interval, y_interval, x_res, y_res)
+    mandelbrot_grid = compute_mandelbrot_set(x_interval, y_interval, x_res, y_res)
     t_e = time.time()
 
     print(f"Mandelbrot set took {t_e - t_s} seconds to compute")
 
     plt.imshow(mandelbrot_grid, cmap="viridis")
+    plt.title(f"Mandelbrot set {x_res}x{y_res}, {max_iter} max iterations.")
     plt.xlim(0, x_res)
     plt.ylim(0, y_res)
+    plt.savefig("mandelbrot_set.png")
     plt.show()
