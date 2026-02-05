@@ -1,0 +1,1 @@
+NSC2026 mandelbrot implementation and optimization.
