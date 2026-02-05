@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 
 def mandelbrot_point(c, max_iter):
@@ -48,11 +49,15 @@ if __name__ == "__main__":
     x_interval = [-2.0, 1.0]
     y_interval = [-1.5, 1.5]
 
-    x_res = 100
-    y_res = 100
+    x_res = 1024
+    y_res = 1024
     max_iter = 100
 
+    t_s = time.time()
     mandelbrot_grid = mandelbrot(x_interval, y_interval, x_res, y_res)
+    t_e = time.time()
+
+    print(f"Mandelbrot set took {t_e - t_s} seconds to compute")
 
     plt.imshow(mandelbrot_grid, cmap="viridis")
     plt.xlim(0, x_res)
