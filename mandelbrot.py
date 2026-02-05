@@ -4,6 +4,12 @@ import time
 
 
 def mandelbrot_point(c, max_iter):
+    """
+    Calculates the iterations for a single mandelbrot point.
+    
+    :param c: Complex number.
+    :param max_iter: The maximum number of iterations to calculate the point for.
+    """
 
     # Setup base case, where max_iter is not enough.
     iter_count = max_iter
@@ -22,17 +28,26 @@ def mandelbrot_point(c, max_iter):
     return iter_count
 
 
-def compute_mandelbrot_set(x_interval, y_interval, N_x = 1024, N_y = 1024, max_iter = 100):
+def compute_mandelbrot_set(x_interval, y_interval, x_res = 1024, y_res = 1024, max_iter = 100):
+    """
+    Computes the mandelbrot set given a x and y interval, resolution and max iterations per point.
+    
+    :param x_interval: Interval in the x direction.
+    :param y_interval: Interval in the y direction.
+    :param x_res: Resolution in the x direction.
+    :param y_res: Resolution in the y direction.
+    :param max_iter: The maximum iterations to calculate per mandelbrot point.
+    """
 
     # Generate uniformly spaced values.
-    grid_x = np.linspace(x_interval[0], x_interval[1], N_x)
-    grid_y = np.linspace(y_interval[0], y_interval[1], N_y)
+    grid_x = np.linspace(x_interval[0], x_interval[1], x_res)
+    grid_y = np.linspace(y_interval[0], y_interval[1], y_res)
 
     mandelbrot_grid = np.zeros((1024, 1024))
 
     # Go through all points in the defined region.
-    for i in range(N_x):
-        for j in range(N_y):
+    for i in range(x_res):
+        for j in range(y_res):
             x = grid_x[i]
             y = grid_y[j]
 
