@@ -59,9 +59,10 @@ if __name__ == "__main__":
 
     print(f"Mandelbrot set took {t_e - t_s} seconds to compute")
 
-    plt.imshow(mandelbrot_grid, cmap="viridis")
+    image = plt.imshow(mandelbrot_grid, cmap="viridis")
     plt.title(f"Mandelbrot set {x_res}x{y_res}, {max_iter} max iterations.")
     plt.xlim(0, x_res)
     plt.ylim(0, y_res)
+    plt.colorbar(image, orientation='vertical')
     plt.savefig("mandelbrot_set.png")
     plt.show()
