@@ -43,7 +43,7 @@ def compute_julia_set(x_interval: tuple[float, float], y_interval: tuple[float, 
     x_values = np.linspace(x_interval[0], x_interval[1], x_res)
     y_values = np.linspace(y_interval[0], y_interval[1], y_res)
 
-    julia_set_grid = np.zeros((1024, 1024))
+    julia_set_grid = np.zeros((x_res, y_res))
 
     # Go through all points in the defined region.
     for i in range(x_res):
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     # The definition of the regions in the x and y direction.
     x_interval = [-1.5, 1.5]
-    y_interval = [-1.5, 1.5]
+    y_interval = [-1.0, 1.0]
 
     x_res = 1024
     y_res = 1024
@@ -70,7 +70,8 @@ if __name__ == "__main__":
 
     # Compute the julia set for (-0.5125 + 0.5213i)
     t_s = time.time()
-    julia_set, x_values, y_values = compute_julia_set(x_interval, y_interval, complex(-0.5125, 0.5213), x_res, y_res)
+    c = complex(-0.5125, 0.5213)
+    julia_set, x_values, y_values = compute_julia_set(x_interval, y_interval, c, x_res, y_res)
     t_e = time.time()
     print(f"Julia set took {t_e - t_s} seconds to compute.")
 

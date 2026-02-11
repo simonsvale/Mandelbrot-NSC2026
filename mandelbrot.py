@@ -44,7 +44,7 @@ def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[fl
     y_values = np.linspace(y_interval[0], y_interval[1], y_res)
 
     # Create a grid for the Mandelbrot set.
-    mandelbrot_grid = np.zeros((1024, 1024))
+    mandelbrot_grid = np.zeros((x_res, y_res))
 
     # Go through all points in the region defined by the x and y intervals.
     for i in range(x_res):
