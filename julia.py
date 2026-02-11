@@ -40,22 +40,22 @@ def compute_julia_set(x_interval, y_interval, c, x_res = 1024, y_res = 1024, max
     """
 
     # Generate uniformly spaced values.
-    grid_x = np.linspace(x_interval[0], x_interval[1], x_res)
-    grid_y = np.linspace(y_interval[0], y_interval[1], y_res)
+    x_values = np.linspace(x_interval[0], x_interval[1], x_res)
+    y_values = np.linspace(y_interval[0], y_interval[1], y_res)
 
     julia_set_grid = np.zeros((1024, 1024))
 
     # Go through all points in the defined region.
     for i in range(x_res):
         for j in range(y_res):
-            x = grid_x[i]
-            y = grid_y[j]
+            x = x_values[i]
+            y = y_values[j]
 
             z = complex(x, y)
             iter_count = julia_point(z, c, max_iter)
             julia_set_grid[j, i] = iter_count
     
-    return julia_set_grid
+    return julia_set_grid, x_values, y_values
 
 
 if __name__ == "__main__":
@@ -70,14 +70,13 @@ if __name__ == "__main__":
 
     # Compute the julia set for (-0.5125 + 0.5213i)
     t_s = time.time()
-    julia_set = compute_julia_set(x_interval, y_interval, complex(-0.5125, 0.5213), x_res, y_res)
+    julia_set, x_values, y_values = compute_julia_set(x_interval, y_interval, complex(-0.5125, 0.5213), x_res, y_res)
     t_e = time.time()
     print(f"Julia set took {t_e - t_s} seconds to compute.")
 
-    image = plt.imshow(julia_set, cmap="viridis")
+    # Plot the julia set.
+    image = plt.pcolormesh(x_values, y_values, julia_set)
     plt.title(f"Julia set {x_res}x{y_res}, {max_iter} max iterations.")
-    plt.xlim(0, x_res)
-    plt.ylim(0, y_res)
     plt.colorbar(image, orientation='vertical')
     plt.savefig("julia_set.png")
     plt.show()
