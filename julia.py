@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 
-def julia_point(z, c, max_iter):
+def julia_point(z: complex, c: complex, max_iter: int):
     """
     Calculates the number of iterations for a julia point given the complex constant c, 
     and a complex number z in 2D space.
@@ -27,7 +27,7 @@ def julia_point(z, c, max_iter):
     return iter_count
 
 
-def compute_julia_set(x_interval, y_interval, c, x_res = 1024, y_res = 1024, max_iter = 100):
+def compute_julia_set(x_interval: tuple[float, float], y_interval: tuple[float, float], c: complex, x_res: int = 1024, y_res: int = 1024, max_iter: int = 100):
     """
     Computes the julia set given a x and y interval, resolution, complex constant c and max iterations per point.
     

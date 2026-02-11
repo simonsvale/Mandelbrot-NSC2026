@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 
-def mandelbrot_point(c, max_iter):
+def mandelbrot_point(c: complex, max_iter: int):
     """
     Calculates the number of iterations for a single mandelbrot point.
     
@@ -28,7 +28,7 @@ def mandelbrot_point(c, max_iter):
     return iter_count
 
 
-def compute_mandelbrot_set(x_interval, y_interval, x_res = 1024, y_res = 1024, max_iter = 100):
+def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024, max_iter: int = 100):
     """
     Computes the Mandelbrot set given a x and y interval, resolution and max iterations per point.
     
