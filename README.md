@@ -5,4 +5,9 @@ max_iter = 100
 resolution = 1024x1024
 time = 39.858 seconds
 
+Lecture 2 - vectorized implementation:
+max_iter = 100
+resolution = 1024x1024
+time = 1.2566 seconds
+
 <img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/0412e71c-c9b4-4ac9-b430-75b6e15ed4aa" />
