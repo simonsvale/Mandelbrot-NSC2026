@@ -72,6 +72,7 @@ if __name__ == "__main__":
 
     t, M = benchmark(compute_mandelbrot_set, Z, C, M, max_iter)
 
+
     # Plot the Mandelbrot set.
     image = plt.pcolormesh(x_values, y_values, M)
     plt.title(f"Mandelbrot set {x_res}x{y_res}, {max_iter} max iterations.")
