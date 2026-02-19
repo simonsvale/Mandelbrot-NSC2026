@@ -16,17 +16,15 @@ def benchmark(func, *args, n_runs=3):
     return median_t, result
 
 
-def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024, max_iter: int = 100):
+def setup_variables(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024):
     """
-    Computes the Mandelbrot set given a x and y interval, resolution and max iterations per point.
-    
+    Setup variables for computing the mandelbrot set.
+
     :param x_interval: Interval in the x direction.
     :param y_interval: Interval in the y direction.
     :param x_res: Resolution in the x direction.
     :param y_res: Resolution in the y direction.
-    :param max_iter: The maximum iterations to calculate per Mandelbrot point.
     """
-
     # Generate x_res and y_res uniformly spaced values within the x and y intervals.
     x_values = np.linspace(x_interval[0], x_interval[1], x_res)
     y_values = np.linspace(y_interval[0], y_interval[1], y_res)
@@ -40,6 +38,16 @@ def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[fl
 
     # Mask array containing iterations.
     M = np.zeros((x_res, y_res))
+    
+    return Z, C, M, x_values, y_values
+
+
+def compute_mandelbrot_set(Z: np.ndarray[np.complex128], C: np.ndarray[np.complex128], M: np.ndarray[int], max_iter: int = 100):
+    """
+    Computes the Mandelbrot set given a x and y interval, resolution and max iterations per point.
+    
+    :param max_iter: The maximum iterations to calculate per Mandelbrot point.
+    """
 
     # Go through all points in the meshgrid.
     for _ in range(max_iter):
@@ -47,7 +55,7 @@ def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[fl
         Z[mask] = Z[mask]**2 + C[mask]
         M[mask] += 1
 
-    return M, x_values, y_values
+    return M
 
 
 if __name__ == "__main__":
@@ -56,15 +64,16 @@ if __name__ == "__main__":
     x_interval = [-2.0, 1.0]
     y_interval = [-1.5, 1.5]
 
-    x_res = 4096
-    y_res = 4096
+    x_res = 1024
+    y_res = 1024
     max_iter = 100
 
-    t, M = benchmark(compute_mandelbrot_set, x_interval, y_interval, x_res, y_res)
+    Z, C, M, x_values, y_values = setup_variables(x_interval, y_interval, x_res, y_res)
+
+    t, M = benchmark(compute_mandelbrot_set, Z, C, M, max_iter)
 
     # Plot the Mandelbrot set.
-    mandelbrot_set, x_values, y_values = compute_mandelbrot_set(x_interval, y_interval, x_res, y_res)
-    image = plt.pcolormesh(x_values, y_values, mandelbrot_set)
+    image = plt.pcolormesh(x_values, y_values, M)
     plt.title(f"Mandelbrot set {x_res}x{y_res}, {max_iter} max iterations.")
     plt.colorbar(image, orientation='vertical')
     plt.savefig("mandelbrot_set.png")
