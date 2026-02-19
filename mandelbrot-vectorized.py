@@ -37,7 +37,7 @@ def setup_variables(x_interval: tuple[float, float], y_interval: tuple[float, fl
     Z = np.zeros((x_res, y_res), dtype=np.complex128)
 
     # Mask array containing iterations.
-    M = np.zeros((x_res, y_res))
+    M = np.zeros((x_res, y_res), dtype=np.int32)
     
     return Z, C, M, x_values, y_values
 
@@ -64,6 +64,20 @@ if __name__ == "__main__":
     x_interval = [-2.0, 1.0]
     y_interval = [-1.5, 1.5]
 
+    """
+    # Deep seahorse valley
+    x_interval = [-0.7487667139, -0.7487667078]
+    y_interval = [0.1236408449, 0.1236408510]
+
+    # Elephant valley
+    x_interval = [0.175, 0.375]
+    y_interval = [-0.1, 0.1]
+
+    # Seahorse Valley
+    x_interval = [-0.8, -0.7]
+    y_interval = [0.05, 0.15]
+    """
+
     x_res = 1024
     y_res = 1024
     max_iter = 100
@@ -71,7 +85,6 @@ if __name__ == "__main__":
     Z, C, M, x_values, y_values = setup_variables(x_interval, y_interval, x_res, y_res)
 
     t, M = benchmark(compute_mandelbrot_set, Z, C, M, max_iter)
-
 
     # Plot the Mandelbrot set.
     image = plt.pcolormesh(x_values, y_values, M)
