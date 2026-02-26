@@ -66,7 +66,7 @@ def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[fl
             x = x_values[i]
             y = y_values[j]
 
-            c = complex(x, y)
+            c = x + 1j * y
             iter_count = mandelbrot_point(c, max_iter)
             mandelbrot_grid[j, i] = iter_count
 
@@ -85,11 +85,12 @@ if __name__ == "__main__":
 
     # Warmup
     # Plot the Mandelbrot set.
-    mandelbrot_set, x_values, y_values = compute_mandelbrot_set(x_interval, y_interval, x_res, y_res)
+    mandelbrot_set, x_values, y_values = compute_mandelbrot_set(x_interval, y_interval, x_res, y_res, dtype=np.float64)
     image = plt.pcolormesh(x_values, y_values, mandelbrot_set)
     plt.title(f"Mandelbrot set {x_res}x{y_res}, {max_iter} max iterations.")
     plt.colorbar(image, orientation='vertical')
     plt.savefig("mandelbrot_set.png")
     plt.show()
 
-    t, M = benchmark(compute_mandelbrot_set, x_interval, y_interval, x_res, y_res)
+    t, M = benchmark(compute_mandelbrot_set, x_interval, y_interval, x_res, y_res, max_iter, np.float32)
+    t, M = benchmark(compute_mandelbrot_set, x_interval, y_interval, x_res, y_res, max_iter, np.float64)
