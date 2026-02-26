@@ -7,5 +7,6 @@ __pycache__
 *.tmp
 *.lprof
 
+git_log.txt
 mandelbrot_set.png
 julia_set.png
