@@ -1,6 +1,7 @@
 # mamba create -n nsc2026 python=3.11
 # mamba activate nsc2026
 # mamba install numpy matplotlib scipy numba pytest dask
+# mamba install line_profiler
 
 # mamba env export > mandelbrot/environment.yml
 
