@@ -11,7 +11,7 @@ if __name__ == "__main__":
     x_res = 1024
     y_res = 1024
     max_iter = 100
-
+    
     profile_names = ["naive_profile.pf", "numba_profile.pf", "numpy_profile.pf"]
 
     cProfile.run("naive_mb(x_interval, y_interval, x_res, y_res, max_iter)", "naive_profile.pf")
@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     for name in (profile_names):
         stats = pstats.Stats(name)
-        stats.sort_stats("total")
-        stats.print_stats(10)
+        stats.sort_stats("cumulative")
+        stats.print_stats(15)
 
 
