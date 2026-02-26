@@ -6,6 +6,8 @@ __pycache__
 *.docx
 *.tmp
 *.lprof
+*.pdf
+*.zip
 
 git_log.txt
 mandelbrot_set.png
