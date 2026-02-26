@@ -41,8 +41,8 @@ def mandelbrot_point(c: complex, max_iter: int):
 
     return iter_count
 
-
-def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024, max_iter: int = 100):
+@njit
+def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024, max_iter: int = 100, dtype=np.float64):
     """
     Computes the Mandelbrot set given a x and y interval, resolution and max iterations per point.
     
@@ -54,8 +54,8 @@ def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[fl
     """
 
     # Generate x_res and y_res uniformly spaced values within the x and y intervals.
-    x_values = np.linspace(x_interval[0], x_interval[1], x_res)
-    y_values = np.linspace(y_interval[0], y_interval[1], y_res)
+    x_values = np.linspace(x_interval[0], x_interval[1], x_res).astype(dtype)
+    y_values = np.linspace(y_interval[0], y_interval[1], y_res).astype(dtype)
 
     # Create a grid for the Mandelbrot set.
     mandelbrot_grid = np.zeros((x_res, y_res))
