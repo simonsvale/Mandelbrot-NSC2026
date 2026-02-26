@@ -42,7 +42,6 @@ def mandelbrot_point(c: complex, max_iter: int):
     return iter_count
 
 
-@njit
 def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024, max_iter: int = 100):
     """
     Computes the Mandelbrot set given a x and y interval, resolution and max iterations per point.

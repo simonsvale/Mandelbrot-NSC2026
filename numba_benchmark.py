@@ -29,4 +29,3 @@ if __name__ == "__main__":
     nb_mb(x_interval, y_interval, x_res, y_res, max_iter)
 
     t, M = benchmark(nb_mb, x_interval, y_interval, x_res, y_res, max_iter)
-
