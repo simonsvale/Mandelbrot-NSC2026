@@ -1,0 +1,8 @@
+biggest challenge, most surprising result, what you learned
+
+During the first three weeks of NSC, the most suprising thing i learned is that numpy has a quite large overhead if you do not use it correct. My naive implementation used np.abs(z), where z was the Python complex type, this implementation took 39.858s. However, switching to Python abs(z) resulted in a much faster program, which took just 8.6s. 
+
+The biggest challenge for me was setting up Mamba, as i have experience with most of the packages (NumPy, Numba, cProfile) we have used so far. However, i have never line_profiler, which to me seems quite useful because it is able to show how much time each line of the profiled function takes.
+
+Despite having experience with most of the stuff we have used in the course so far, i feel that i have gotten a much better understanding of how to effectively use these tools. For example, as part of our project we are using KNN with cosine distance and with a lot of neighbours of many dimensions. For one test sample our naive implementation took ~40s, but after adding the @NJIT decorator, adding "prange" and setting parallel=True, it only took 0.125s.
+
