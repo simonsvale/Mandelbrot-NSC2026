@@ -2,6 +2,7 @@
 __pycache__
 .ipynb checkpoint
 .vscode
+*.pf
 
 mandelbrot_set.png
 julia_set.png
