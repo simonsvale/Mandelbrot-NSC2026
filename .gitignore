@@ -3,6 +3,8 @@ __pycache__
 .ipynb checkpoint
 .vscode
 *.pf
+*docx
+*tmp
 
 mandelbrot_set.png
 julia_set.png
