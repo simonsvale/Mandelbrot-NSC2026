@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import time, statistics
-
+from line_profiler import profile
 
 def benchmark(func, *args, n_runs=3):
     """ Time func , return median of n_runs . 
@@ -83,13 +83,11 @@ if __name__ == "__main__":
     max_iter = 100
 
     t, M = benchmark(compute_mandelbrot_set, x_interval, y_interval, x_res, y_res)
-
+    
     # Plot the Mandelbrot set.
-    """
     mandelbrot_set, x_values, y_values = compute_mandelbrot_set(x_interval, y_interval, x_res, y_res)
     image = plt.pcolormesh(x_values, y_values, mandelbrot_set)
     plt.title(f"Mandelbrot set {x_res}x{y_res}, {max_iter} max iterations.")
     plt.colorbar(image, orientation='vertical')
     plt.savefig("mandelbrot_set.png")
     plt.show()
-    """
