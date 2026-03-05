@@ -64,7 +64,7 @@ def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[fl
 
     # Go through all points in the region defined by the x and y intervals.
     for i in prange(x_res):
-        for j in prange(y_res):
+        for j in range(y_res):
             x = x_values[i]
             y = y_values[j]
 
