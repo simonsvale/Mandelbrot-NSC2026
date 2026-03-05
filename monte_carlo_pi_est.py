@@ -15,20 +15,6 @@ def estimate_pi_worker(N):
     return inlier_points
 
 
-def serial_estimate_pi(N):
-
-    inlier_points = 0
-
-    for _ in range(N):
-        x, y = random.random(), random.random()
-
-        if x**2 + y**2 <= 1:
-            inlier_points += 1
-
-    pi_est = 4 * (inlier_points / N)
-    return pi_est
-
-
 def sweep(N, core_count, run_count=3):
 
     processors = [cores for cores in range(1, core_count + 1)]
@@ -39,7 +25,7 @@ def sweep(N, core_count, run_count=3):
     serial_time = []
     for _ in range(run_count):
         t_s = time.perf_counter()
-        serial_estimate_pi(N)
+        estimate_pi_worker(N)
         t_e = time.perf_counter()
         serial_time.append(t_e - t_s)
     serial_median_time = statistics.median(serial_time)
