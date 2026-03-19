@@ -71,7 +71,7 @@ def get_n_chunk_list(N):
     n_chunks_list = []
 
     # Initialize the loop variable.
-    i = 8
+    i = 4
     while i <= N:
         n_chunks_list.append(i)
         i *= 2
@@ -158,6 +158,16 @@ if __name__ == "__main__":
     # Peform a sweep over the n_chunks list.
     sweep_metrics = sweep(N, x_interval, y_interval, n_chunks_list, T1, workers, max_iter)
     print(sweep_metrics)
+
+    x_n_chunks = sweep_metrics[:,0]
+    y_time = sweep_metrics[:,1]
+    plt.plot(x_n_chunks, y_time)
+    plt.title(f"{workers} worker n_chunk sweep for a mandelbrot set with resolution {N}x{N}")
+    plt.xlabel("n_chunks")
+    plt.ylabel("Time [s]")
+    plt.xscale("log")
+    plt.savefig("dask_chunk_sweep.png")
+
 
     # So we can use the dashboard.
     input("Press enter to close the Dask dashboard!")

@@ -67,15 +67,6 @@ def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
     return np.vstack(mandelbrot_grid), exec_time
 
 
-def sweep(x_interval, y_interval):
-    pass
-
-
-def calculate_LIF(p, Tp, T1):
-    LIF = p * (Tp / T1) - 1
-    return LIF
-
-
 def mandelbrot_serial(N, x_interval, y_interval, max_iter=100):
     return mandelbrot_chunk(0, N, N, x_interval, y_interval, max_iter)
 
@@ -125,7 +116,7 @@ if __name__ == "__main__":
     # So we can use the dashboard.
     input("Press any key to close the Dask dashboard!")
 
-    # Graceful shutdown of dask.
+    # Gracefully shutdown of dask.
     client.close()
     cluster.close()
 
