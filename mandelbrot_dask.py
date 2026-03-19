@@ -25,25 +25,20 @@ def mandelbrot_pixel(c_real, c_imag, max_iter):
 @njit(cache=True)
 def mandelbrot_chunk(row_start, row_end, N, x_interval, y_interval, max_iter):
 
-    x_max, x_min = x_interval[1], x_interval[0]
-    y_max, y_min = y_interval[1], y_interval[0]
+    x_min, x_max = x_interval[0], x_interval[1]
+    y_min, y_max = y_interval[0], y_interval[1]
 
-    # Initalize the output chunk of the mandelbrot set.
-    chunk_result = np.empty((row_end - row_start, N), dtype=np.int64)
+    # Initialize output array.
+    result = np.empty((row_end - row_start, N))
 
-    # Split the calculation up into N calculations.
-    x_values = np.linspace(x_interval[0], x_interval[1], N)
-    y_values = np.linspace(y_interval[0], y_interval[1], N)
-
-    # Calculate the part of the mandelbrot set in this chunk.
+    dx = (x_max - x_min) / N
+    dy = (y_max - y_min) / N
+    
     for row in range(row_end - row_start):
-        c_imag = y_values[row]
-
-        # Go through every pixel in the row.
+        c_imag = y_min + (row + row_start) * dy
         for col in range(N):
-            c_real = x_values[col]
-            chunk_result[row, col] = mandelbrot_pixel(c_real, c_imag, max_iter)
-    return chunk_result
+            result[row, col] = mandelbrot_pixel(x_min + col*dx, c_imag, max_iter)
+    return result
 
 
 def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
@@ -69,6 +64,19 @@ def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
     return np.vstack(mandelbrot_grid)
 
 
+def sweep(x_interval, y_interval):
+    pass
+
+
+def calculate_LIF(p, Tp, T1):
+    LIF = p * (Tp / T1) - 1
+    return LIF
+
+
+def mandelbrot_serial(N, x_interval, y_interval, max_iter=100):
+    return mandelbrot_chunk(0, N, N, x_interval, y_interval, max_iter)
+
+
 if __name__ == "__main__":
 
     # The definition of the regions in the x and y direction.
@@ -78,18 +86,26 @@ if __name__ == "__main__":
     N = 8192
     max_iter = 100
     
-    core_count = psutil.cpu_count(logical=True)
-    chunk_size = core_count
-    threads = 1
-
+    workers = psutil.cpu_count(logical=False)
+    n_chunks = workers
     run_count = 3
 
-    # Create the dask cluster.
-    cluster = LocalCluster(n_workers=8, threads_per_worker=1)
+    # Create the dask cluster, set the initial amount to 1.
+    cluster = LocalCluster(n_workers=workers, threads_per_worker=1, processes=True, memory_limit=None)
     client = Client(cluster)
 
     # JIT compile the mandelbrot chunk function.
     client.run(lambda: mandelbrot_chunk(0, 8, 8, x_interval, y_interval, 10))
+
+    # Get the serial time.
+    serial_time_list = []
+    for _ in range(run_count):
+        t0 = time.perf_counter()
+        mandelbrot_serial(N, x_interval, y_interval, max_iter)
+        t1 = time.perf_counter()
+        serial_time_list.append(t1 - t0)
+    T1 = statistics.median(serial_time_list)
+    print(f"Serial Median: {T1:.4f}s, (min = {min(serial_time_list):.4f}, max = {max(serial_time_list):.4f})")
 
     # Define output variable. This is just so we can visualize it later.
     mandelbrot_grid = 0
@@ -98,17 +114,19 @@ if __name__ == "__main__":
     time_list = []
     for _ in range(run_count):
         t0 = time.perf_counter()
-        mandelbrot_grid = mandelbrot_dask(N, x_interval, y_interval, max_iter, chunk_size)
-        t_dask = time.perf_counter() - t0
-        time_list.append(t_dask)
+        mandelbrot_grid = mandelbrot_dask(N, x_interval, y_interval, max_iter, n_chunks)
+        t1 = time.perf_counter()
+        time_list.append(t1 - t0)
     median_time = statistics.median(time_list)
-    print(f"Dask Median: {median_time:.4f}s, (min = {min(time_list):.4f}, max = { max(time_list):.4f})")
+    print(f"Dask Median: {median_time:.4f}s, (min = {min(time_list):.4f}, max = {max(time_list):.4f})")
+
+    # So we can use the dashboard.
+    input("Press any key to close the Dask dashboard!")
 
     # Graceful shutdown of dask.
     client.close()
     cluster.close()
 
-    """
     # Create x and y values to be displayed in the pcolormesh.
     x_values = np.linspace(x_interval[0], x_interval[1], N)
     y_values = np.linspace(y_interval[0], y_interval[1], N)
@@ -116,6 +134,5 @@ if __name__ == "__main__":
     image = plt.pcolormesh(x_values, y_values, mandelbrot_grid)
     plt.title(f"Mandelbrot set {N}x{N}, {max_iter} max iterations.")
     plt.colorbar(image, orientation='vertical')
-    plt.savefig("mandelbrot_set.png")
-    #plt.show()
-    """
+    #plt.savefig("mandelbrot_set.png")
+    plt.show()
