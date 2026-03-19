@@ -59,9 +59,12 @@ def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
         # Set the new starting position of the row.
         row_start = row_end
     
-    # Compute the chunk.
+    # Compute the chunk and time it.
+    t_s = time.perf_counter()
     mandelbrot_grid = dask.compute(*dask_tasks)
-    return np.vstack(mandelbrot_grid)
+    t_e = time.perf_counter()
+    exec_time = t_e - t_s
+    return np.vstack(mandelbrot_grid), exec_time
 
 
 def sweep(x_interval, y_interval):
@@ -86,6 +89,7 @@ if __name__ == "__main__":
     N = 8192
     max_iter = 100
     
+    # Get the largest amount of workers.
     workers = psutil.cpu_count(logical=False)
     n_chunks = workers
     run_count = 3
@@ -113,10 +117,8 @@ if __name__ == "__main__":
     # Find the median time.
     time_list = []
     for _ in range(run_count):
-        t0 = time.perf_counter()
-        mandelbrot_grid = mandelbrot_dask(N, x_interval, y_interval, max_iter, n_chunks)
-        t1 = time.perf_counter()
-        time_list.append(t1 - t0)
+        mandelbrot_grid, exec_time = mandelbrot_dask(N, x_interval, y_interval, max_iter, n_chunks)
+        time_list.append(exec_time)
     median_time = statistics.median(time_list)
     print(f"Dask Median: {median_time:.4f}s, (min = {min(time_list):.4f}, max = {max(time_list):.4f})")
 
@@ -128,6 +130,7 @@ if __name__ == "__main__":
     cluster.close()
 
     # Create x and y values to be displayed in the pcolormesh.
+    """
     x_values = np.linspace(x_interval[0], x_interval[1], N)
     y_values = np.linspace(y_interval[0], y_interval[1], N)
     
@@ -136,3 +139,4 @@ if __name__ == "__main__":
     plt.colorbar(image, orientation='vertical')
     #plt.savefig("mandelbrot_set.png")
     plt.show()
+    """
