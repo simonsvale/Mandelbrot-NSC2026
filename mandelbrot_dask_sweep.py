@@ -4,7 +4,7 @@ from numba import njit
 
 from dask import delayed
 from dask.distributed import Client, LocalCluster
-import time, statistics, dask, psutil
+import time, statistics, dask, psutil, math
 
 
 @njit(cache=True)
@@ -68,14 +68,7 @@ def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
 
 
 def get_n_chunk_list(N):
-    n_chunks_list = []
-
-    # Initialize the loop variable.
-    i = 4
-    while i <= N:
-        n_chunks_list.append(i)
-        i *= 2
-
+    n_chunks_list = [2**i for i in range(2, int(math.log2(N) + 1))]
     return n_chunks_list
 
 
