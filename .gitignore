@@ -8,6 +8,7 @@ __pycache__
 *.lprof
 *.pdf
 *.zip
+pi_task_graph.png
 
 git_log.txt
 mandelbrot_set.png
