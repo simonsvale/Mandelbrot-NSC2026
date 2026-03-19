@@ -88,10 +88,10 @@ if __name__ == "__main__":
     cluster = LocalCluster(n_workers=8, threads_per_worker=1)
     client = Client(cluster)
 
-    # JIT compile (warmup).
+    # JIT compile the mandelbrot chunk function.
     client.run(lambda: mandelbrot_chunk(0, 8, 8, x_interval, y_interval, 10))
 
-    # Setup output.
+    # Define output variable. This is just so we can visualize it later.
     mandelbrot_grid = 0
 
     # Find the median time.
@@ -108,12 +108,14 @@ if __name__ == "__main__":
     client.close()
     cluster.close()
 
+    """
     # Create x and y values to be displayed in the pcolormesh.
     x_values = np.linspace(x_interval[0], x_interval[1], N)
     y_values = np.linspace(y_interval[0], y_interval[1], N)
     
-    #image = plt.pcolormesh(x_values, y_values, mandelbrot_grid)
-    #plt.title(f"Mandelbrot set {N}x{N}, {max_iter} max iterations.")
-    #plt.colorbar(image, orientation='vertical')
-    #plt.savefig("mandelbrot_set.png")
+    image = plt.pcolormesh(x_values, y_values, mandelbrot_grid)
+    plt.title(f"Mandelbrot set {N}x{N}, {max_iter} max iterations.")
+    plt.colorbar(image, orientation='vertical')
+    plt.savefig("mandelbrot_set.png")
     #plt.show()
+    """
