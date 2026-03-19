@@ -32,16 +32,16 @@ def mandelbrot_chunk(row_start, row_end, N, x_interval, y_interval, max_iter):
     chunk_result = np.empty((row_end - row_start, N), dtype=np.int64)
 
     # Split the calculation up into N calculations.
-    dx = (x_max - x_min) / N
-    dy = (y_max - y_min) / N
+    x_values = np.linspace(x_interval[0], x_interval[1], N)
+    y_values = np.linspace(y_interval[0], y_interval[1], N)
 
     # Calculate the part of the mandelbrot set in this chunk.
     for row in range(row_end - row_start):
-        c_imag = y_min + (row + row_start) * dy
+        c_imag = y_values[row]
 
         # Go through every pixel in the row.
         for col in range(N):
-            c_real = x_min + col*dx
+            c_real = x_values[col]
             chunk_result[row, col] = mandelbrot_pixel(c_real, c_imag, max_iter)
     return chunk_result
 
@@ -112,8 +112,8 @@ if __name__ == "__main__":
     x_values = np.linspace(x_interval[0], x_interval[1], N)
     y_values = np.linspace(y_interval[0], y_interval[1], N)
     
-    image = plt.pcolormesh(x_values, y_values, mandelbrot_grid)
-    plt.title(f"Mandelbrot set {N}x{N}, {max_iter} max iterations.")
-    plt.colorbar(image, orientation='vertical')
-    plt.savefig("mandelbrot_set.png")
+    #image = plt.pcolormesh(x_values, y_values, mandelbrot_grid)
+    #plt.title(f"Mandelbrot set {N}x{N}, {max_iter} max iterations.")
+    #plt.colorbar(image, orientation='vertical')
+    #plt.savefig("mandelbrot_set.png")
     #plt.show()
