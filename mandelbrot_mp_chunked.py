@@ -129,7 +129,7 @@ if __name__ == "__main__":
     runs = 3
 
     # Fixed to best L4 run worker/core count:
-    workers = 16
+    workers = psutil.cpu_count(logical=True)
 
     s_time_list = []
     for _ in range(runs):
