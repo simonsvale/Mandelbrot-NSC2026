@@ -6,7 +6,6 @@ __pycache__
 *.docx
 *.tmp
 *.lprof
-*.pdf
 *.zip
 pi_task_graph.png
 
