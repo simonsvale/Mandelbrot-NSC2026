@@ -107,6 +107,7 @@ def sweep(N, x_interval, y_interval, n_chunks_list, T1, p, max_iter=100, run_cou
         sweep_metrics[i][2] = 0.0
         sweep_metrics[i][3] = calculate_speedup(Tp, T1)
         sweep_metrics[i][4] = calculate_LIF(p, Tp, T1)
+        print(f"Time = {Tp}, n_chunks = {n_chunks_list[i]}")
 
     return sweep_metrics
 
@@ -123,7 +124,7 @@ if __name__ == "__main__":
     max_iter = 100
     
     # Get the largest amount of workers.
-    workers = psutil.cpu_count(logical=False)
+    workers = psutil.cpu_count(logical=True)
     n_chunks = workers
     run_count = 3
     print(f"Number of workers: {workers}")
