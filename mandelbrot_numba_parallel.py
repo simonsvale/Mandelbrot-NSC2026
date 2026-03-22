@@ -81,8 +81,8 @@ if __name__ == "__main__":
     x_interval = [-2.0, 1.0]
     y_interval = [-1.5, 1.5]
 
-    x_res = 1024
-    y_res = 1024
+    x_res = 8192
+    y_res = 8192
     max_iter = 100
 
     t, M = benchmark(compute_mandelbrot_set, x_interval, y_interval, x_res, y_res)
