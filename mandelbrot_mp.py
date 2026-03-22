@@ -4,7 +4,7 @@ from multiprocessing import Pool
 import time, statistics, psutil
 import matplotlib.pyplot as plt
 
-@njit
+@njit(cache=True)
 def mandelbrot_pixel(c_real, c_imag, max_iter):
     z_real, z_imag = 0, 0
 
@@ -19,9 +19,8 @@ def mandelbrot_pixel(c_real, c_imag, max_iter):
     return max_iter
 
 
-@njit
-def mandelbrot_chunk(row_start, row_end, N,
-    x_min, x_max, y_min, y_max, max_iter):
+@njit(cache=True)
+def mandelbrot_chunk(row_start, row_end, N, x_min, x_max, y_min, y_max, max_iter):
     out = np.empty((row_end - row_start, N), dtype=np.int32)
     dx = (x_max - x_min) / N
     dy = (y_max - y_min) / N
@@ -51,27 +50,32 @@ def mandelbrot_parallel(N, x_min, x_max, y_min, y_max, max_iter=100, n_workers=4
 
     with Pool(processes=n_workers) as pool:
         pool.map(_worker, chunks)
-        parts = pool.map(_worker, chunks)
 
-    return np.vstack(parts)
+        t_s = time.perf_counter()
+        parts = pool.map(_worker, chunks)
+        parts = np.vstack(parts)
+        t_e = time.perf_counter()
+        exec_time = t_e - t_s
+
+    return parts, exec_time
 
 
 if __name__ == "__main__":
     x_interval = [-2.0, 1.0]
     y_interval = [-1.5, 1.5]
 
-    res = 1024
+    N = 8192
     max_iter = 100
 
     runs = 3
 
-    core_count = psutil.cpu_count(logical=False)
+    core_count = psutil.cpu_count(logical=True)
 
     s_time_list = []
     for _ in range(runs):
         t_s = time.perf_counter()
         mandelbrot_serial(
-            res, 
+            N, 
             x_interval[0], x_interval[1], 
             y_interval[0], y_interval[1], 
             max_iter
@@ -81,23 +85,43 @@ if __name__ == "__main__":
     s_median = statistics.median(s_time_list)
     print("Serial median time: ", s_median)
 
+    speedup_list = []
+    efficiency_list = []
 
-    p_time_list = []
-    for _ in range(runs):
-        t_s = time.perf_counter()
-        M = mandelbrot_parallel(
-            res, 
-            x_interval[0], x_interval[1], 
-            y_interval[0], y_interval[1], 
-            max_iter, n_workers=core_count
-        )
-        t_e = time.perf_counter()
-        p_time_list.append(t_e - t_s)
-    p_median = statistics.median(p_time_list)
-    print("Serial median time: ", p_median)
+    for cores in range(2, core_count + 1):
+        p_time_list = []
+        for _ in range(runs):
+            M, exec_time = mandelbrot_parallel(
+                N, 
+                x_interval[0], x_interval[1], 
+                y_interval[0], y_interval[1], 
+                max_iter, n_workers=cores
+            )
+            p_time_list.append(exec_time)
+        p_median = statistics.median(p_time_list)
+        speedup = s_median / p_median
+        efficiency = speedup / cores
+        speedup_list.append(speedup)
+        efficiency_list.append(efficiency)
+        print(f"Parallel median time with {cores} cores: {p_median}, Speedup: {speedup}, Efficiency: {efficiency}")
 
+    core_list = [cores for cores in range(1, core_count + 1)]
+    speedup_list.insert(0, 0)
+    plt.plot(core_list, speedup_list)
+    plt.xlabel("Core Count")
+    plt.ylabel("Speedup")
+    plt.savefig("MP_speedup.png")
+    plt.show()
+
+    efficiency_list.insert(0, 1)
+    plt.plot(core_list, efficiency_list)
+    plt.xlabel("Core Count")
+    plt.ylabel("Efficiency")
+    plt.savefig("MP_efficiency.png")
+    plt.show()
+    
     image = plt.imshow(M, extent=(x_interval[0], x_interval[1], y_interval[0], y_interval[1]), interpolation="nearest")
-    plt.title(f"Mandelbrot set {res}x{res}, {max_iter} max iterations.")
+    plt.title(f"Mandelbrot set {N}x{N}, {max_iter} max iterations.")
     plt.colorbar(image, orientation='vertical')
     plt.show()
 
