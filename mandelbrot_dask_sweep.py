@@ -86,7 +86,7 @@ def mandelbrot_serial(N, x_interval, y_interval, max_iter=100):
     return mandelbrot_chunk(0, N, N, x_interval, y_interval, max_iter)
 
 
-def sweep(N, x_interval, y_interval, n_chunks_list, T1, p, max_iter=100):
+def sweep(N, x_interval, y_interval, n_chunks_list, T1, p, max_iter=100, run_count = 3):
 
     sweep_number = len(n_chunks_list)
 
