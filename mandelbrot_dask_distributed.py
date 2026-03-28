@@ -171,6 +171,6 @@ if __name__ == "__main__":
     # Record the metrics.
     speedup = calculate_speedup(Tp, T1)
     LIF = calculate_LIF(workers, Tp, T1)
-    print(f"Parallel time: {Tp}, Serial time: {T1}, Speedup: {speedup}, LIF: {LIF}")
+    print(f"Parallel time: {Tp:.4f}, Serial time: {T1:.4f}, Speedup: {speedup:.4f}, LIF: {LIF:.4f}")
 
     client.close()
