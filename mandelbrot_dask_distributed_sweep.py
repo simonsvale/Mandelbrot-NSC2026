@@ -3,9 +3,12 @@ import numpy as np
 from numba import njit
 
 from dask import delayed
-from dask.distributed import Client, LocalCluster
+from dask.distributed import Client
 import time, statistics, dask, psutil, math
 
+# conda create -n nsc python=3.11 "dask[distributed]" numba numpy matplotlib psutil -c conda-forge -y
+
+# dask worker 10.92.0.243:8786 --nworkers -1 --nthreads 1
 
 @njit(cache=True)
 def mandelbrot_pixel(c_real, c_imag, max_iter):
@@ -135,10 +138,10 @@ if __name__ == "__main__":
     max_iter = 100
     
     # Get the largest amount of workers.
-    workers = psutil.cpu_count(logical=True)
-    n_chunks = workers
-    run_count = 3
+    workers = 6 # 3x "dask worker 10.92.0.243:8786 --nworkers -1 --nthreads 1"
     print(f"Number of workers: {workers}")
+
+    run_count = 3
 
     # Create the the distributed dask client.
     ip = get_cluster_ip("cluster_ip")
@@ -160,7 +163,7 @@ if __name__ == "__main__":
     # Initialize the list of number of chunks to sweep over.
     n_chunks_list = get_n_chunk_list(N)
         
-    # Peform a sweep over the n_chunks list.
+    # Peform a sweep over the n_chunks_list.
     sweep_metrics = sweep(N, x_interval, y_interval, n_chunks_list, T1, workers, max_iter)
     print(sweep_metrics)
 
@@ -171,9 +174,6 @@ if __name__ == "__main__":
     plt.xlabel("n_chunks")
     plt.ylabel("Time [s]")
     plt.xscale("log")
-    plt.savefig("dask_chunk_sweep.png")
-
-    # So we can use the dashboard.
-    input("Press enter to close the Dask dashboard!")
+    plt.savefig("mandelbrot_distributed.png")
 
     client.close()
