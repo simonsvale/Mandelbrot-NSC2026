@@ -1,0 +1,362 @@
+2026-04-06 3fda408 Added the last stuff for the MP2 assignment.
+
+ MP2.pdf | Bin 279976 -> 305475 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+2026-03-28 90f5396 Added the reflection text to MP2
+
+ MP2.pdf | Bin 275612 -> 279976 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+2026-03-28 82b96ae Updated the performance notebook for MP2 with the results from L7
+
+ MP2.pdf | Bin 270444 -> 275612 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+2026-03-28 9785213 Made it so only 4 significant digits are shown in the print
+
+ mandelbrot_dask_distributed.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2026-03-28 8a750d5 Added the results from experiment one L7 to the performance notebook pdf.
+
+ MP2.pdf | Bin 230536 -> 270444 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+2026-03-28 22c989c Added a script to sweep distributed dask workers (manually)
+
+ mandelbrot_dask_distributed.py | 176 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 176 insertions(+)
+2026-03-28 5dfce4e Updated the program so it uses the correct number of workers for the speedup calculation
+
+ mandelbrot_dask_distributed_sweep.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+2026-03-28 1cf9953 Added a distributed dask implementation to be run on Strato
+
+ .gitignore                           |   4 +-
+ mandelbrot_dask_distributed_sweep.py | 179 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 182 insertions(+), 1 deletion(-)
+2026-03-25 904bd4d Added .pem keyfiles to the .gitignore.
+
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+2026-03-25 ecf666d Renamed the handins from M1 & M2 to MP1 and MP2.
+
+ M1.pdf => MP1.pdf | Bin
+ M2.pdf => MP2.pdf | Bin
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+2026-03-22 2d7f84d Finalized L4, L5 and L6 for the M2 assignment
+
+ M2.pdf | Bin 231241 -> 230536 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+2026-03-22 9f5acee Finalized L5 results for the M2 assignment
+
+ M2.pdf | Bin 230430 -> 231241 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+2026-03-22 1fe6ee9 8192x8192 test with Numba parallel
+
+ mandelbrot_numba_parallel.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+2026-03-22 dfcff1c Added L5 results to the M2 assignment document
+
+ M2.pdf | Bin 151835 -> 230430 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+2026-03-22 c47c8f0 Apparantly The JIT compilation is different when not doing it on all chunks when using pool, this is not shown in this commit, but when using the guideline on the L5 slides performance is degraded significantly...
+
+ mandelbrot_mp_chunked.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2026-03-22 6065a25 Added a chunked multiprocessed implementation of the mandelbrot set, but during sweeps it is almost twice as slow as the normal MP version with the same number of chunks and cores??
+
+ mandelbrot_mp_chunked.py | 152 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 152 insertions(+)
+2026-03-22 d1b3781 Tested the Dask implementation using  all 16 cores (physical + logical), this did not result in an improvement over just using the 8 physical cores.
+
+ mandelbrot_dask_sweep.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-03-22 864daf7 Forgot a to add a function parameter 'run_count', this did not impact the results.
+
+ mandelbrot_dask_sweep.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2026-03-22 d118afa Added the memory type test for numba that i forgot to commit before M1.
+
+ memory_type_performance.py | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+2026-03-22 1f15746 Added the Milestone results for L4 and L6 to the M2 assignment
+
+ M2.pdf | Bin 0 -> 151835 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+2026-03-22 3313a92 Added the multiprocessing speedup and efficiency graphs
+
+ MP_efficiency.png | Bin 0 -> 18373 bytes
+ MP_speedup.png    | Bin 0 -> 17907 bytes
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+2026-03-22 ae09d36 Removed .pdf files from the .gitignore file and made the M1 PDF document visible
+
+ .gitignore |   1 -
+ M1.pdf     | Bin 0 -> 435694 bytes
+ 2 files changed, 1 deletion(-)
+2026-03-22 801cebb Finished the last milestone in L4 and figured out that the partitioning is the reason for the odd speedup on odd core numbers
+
+ mandelbrot_mp.py | 70 +++++++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 47 insertions(+), 23 deletions(-)
+2026-03-19 9af530b Found a much more elegant way of creating the n_chunk_list
+
+ mandelbrot_dask_sweep.py | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
+2026-03-19 5e0a595 Added python-graphviz to the mamba install comment
+
+ test_install.py | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+2026-03-19 ba2aa4a Added the reflections from the M1 assignment peer review session.
+
+ M1-reflections | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2026-03-19 2062cf6 Finished the chunk number sweep script and begun writing results in a word document for the M2 assignment.
+
+ dask_chunk_sweep.png     | Bin 0 -> 22333 bytes
+ mandelbrot_dask.py       |  11 +----------
+ mandelbrot_dask_sweep.py |  12 +++++++++++-
+ 3 files changed, 12 insertions(+), 11 deletions(-)
+2026-03-19 4f291a3 Added sweeping over n_chunks for the dask implementation.
+
+ mandelbrot_dask_sweep.py | 167 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 167 insertions(+)
+2026-03-19 7526933 Changed how the computation of the mandelbrot dask implementation is timed to align with the multi processed version from L4
+
+ mandelbrot_dask.py | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+2026-03-19 e77fc92 Reverted the optimization as it broke the logic.
+
+ mandelbrot_dask.py | 75 +++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 46 insertions(+), 29 deletions(-)
+2026-03-19 9074dff Commeted out the visualization part
+
+ mandelbrot_dask.py | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+2026-03-19 1f35732 Improved the performance of template code from the slides.
+
+ mandelbrot_dask.py | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+2026-03-19 d2cf389 Added the dask implementation for computing the mandelbrot set.
+
+ mandelbrot_dask.py | 119 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 119 insertions(+)
+2026-03-19 b1fc14b Updated the gitignore with the task graph image from dask.
+
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+2026-03-19 70352c8 Monte carlo simulation of pi using dask.
+
+ monte_carlo_pi_dask.py | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+2026-03-18 3f7d04f Added a script to test the dask installation
+
+ dask_test.py | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+2026-03-05 d7aa0f7 Added a multiprocessed mandelbrot implementation
+
+ mandelbrot_mp.py      | 103 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ monte_carlo_pi_est.py |  16 +-------
+ 2 files changed, 104 insertions(+), 15 deletions(-)
+2026-03-05 f427f67 Added visualization and plots for speedup and efficiency for the monte carlo Pi simulation.
+
+ monte_carlo_pi_est.py | 82 +++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 77 insertions(+), 5 deletions(-)
+2026-03-05 47149a2 Added a multiprocessed Pi Monte Carlo simulation.
+
+ monte_carlo_pi_est.py | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+2026-03-05 1311e3e Removed a redundant prange
+
+ mandelbrot_numba_parallel.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2026-02-26 ec60dff Added a script for comparing float32 and float64 performance with Numba.
+
+ .gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+2026-02-26 5e8b0a6 Added git_log.txt to the .gitignore
+
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+2026-02-26 aad5c3f Added a line for installing the line_profiler package
+
+ test_install.py | 1 +
+ 1 file changed, 1 insertion(+)
+2026-02-26 aa3d79e Readded the benchmark to the naive mandelbrot implementation
+
+ mandelbrot_naive.py | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+2026-02-26 fdc833d Added a document with reflections for the first miniproject
+
+ M1-reflections | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+2026-02-26 47312f0 Added testing of different datatypes to the mandelbrot numba implementation
+
+ mandelbrot_numba.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+2026-02-26 2d16416 Added a dtype parameter to compute_mandelbrot_set() to be able to measure execution time with different types
+
+ mandelbrot_numba.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+2026-02-26 9bb21c5 Hybrid JIT compilation, only the inner loop
+
+ mandelbrot_numba.py | 1 -
+ numba_benchmark.py  | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+2026-02-26 bda9afb Added a numba benchmark script!
+
+ .gitignore         |  5 +++--
+ numba_benchmark.py | 32 ++++++++++++++++++++++++++++++++
+ profiling.py       |  6 +++---
+ 3 files changed, 38 insertions(+), 5 deletions(-)
+2026-02-26 ec6596c Added a script to profile line by line
+
+ .gitignore      |  2 ++
+ line_profile.py | 23 +++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+2026-02-26 f5d2db0 Updated readme with new benchmarking results
+
+ README.md | 7 +++++++
+ 1 file changed, 7 insertions(+)
+2026-02-26 81ca132 Added a parallel JIT compiled version of the mandelbrot implementation.
+
+ mandelbrot_numba_parallel.py | 96 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+2026-02-26 8a6cce3 Added a profiling script and added the profile outputs to the gitignore
+
+ .gitignore   |  1 +
+ profiling.py | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+2026-02-26 bd579ed Added an implmentation of the mandelbrot set using JIT compilation.
+
+ mandelbrot_numba.py | 96 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+2026-02-26 88faedf Added __pycache__ to the gitignore
+
+ .gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2026-02-19 8fb0b8a Added a script that plots time as a function of the mandelbrot resolution.
+
+ mandelbrot_time_scaling.py | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+2026-02-19 866a542 Changed dashes to underscores to be able to import functions from other files more easily.
+
+ mandelbrot-naive.py => mandelbrot_naive.py          |  0
+ ...elbrot-vectorized.py => mandelbrot_vectorized.py |  0
+ memory_layout_performance.py                        | 21 +++++++++++----------
+ 3 files changed, 11 insertions(+), 10 deletions(-)
+2026-02-19 180b07b Added a script to check memory layout performance, utilizing the cache efficiently we get ~8x speedup.
+
+ memory_layout_performance.py | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+2026-02-19 f6c200d Explored some mandelbrot valleys
+
+ mandelbrot-vectorized.py | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+2026-02-19 0d577be Added vectorized timing to README file.
+
+ README.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+2026-02-19 2d591f2 Vectorized implementation time measurement: 1.2566s (median of n=3)
+
+ mandelbrot-vectorized.py | 1 +
+ 1 file changed, 1 insertion(+)
+2026-02-19 34e4d3d Seperated creation of the mesh grid to hold the iterations from mandelbrot computation, to get more accurate time measurements.
+
+ mandelbrot-vectorized.py | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+2026-02-19 2beb90b Added a vectorized implementation using numpy called mandelbrot-vectorized.py
+
+ mandelbrot-vectorized.py | 71 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+2026-02-19 70308e6 Deleted mandelbrot.py
+
+ mandelbrot.py | 82 -----------------------------------------------------------
+ 1 file changed, 82 deletions(-)
+2026-02-19 cbff5b6 Renamed mandelbrot.py to mandelbrot-naive.py
+
+ mandelbrot-naive.py | 95 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+2026-02-11 b37f5c1 Fixed a bug where the resolution of the mandelbrot and julia grids where hard coded to 1024x1024.
+
+ julia.py      | 7 ++++---
+ mandelbrot.py | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+2026-02-11 3720b52 Added type hints to functions in mandelbrot.py and julia.py.
+
+ julia.py      | 4 ++--
+ mandelbrot.py | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+2026-02-11 fe30bf5 Added the plotting improvements from mandelbrot.py in commit b428b6dc893ce8292ac03e63a126f99f8cd3da12 to julia.py
+
+ julia.py | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+2026-02-11 b428b6d Improved the plotting of the Mandelbrot set to enable one to see the complex number that resulted in that amount of iterations. Multiple comments were also made more precise.
+
+ mandelbrot.py | 43 +++++++++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
+2026-02-11 a5f1a1f Added a python script for computing any julia set.
+
+ .gitignore |  4 ++-
+ julia.py   | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 86 insertions(+), 1 deletion(-)
+2026-02-05 73d8e2b Added image of 1024x1024, 100 iterations to README.md
+
+ README.md | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+2026-02-05 a15d216 Added docstrings and changed N_x and N_y to x_res and y_res respectivly.
+
+ mandelbrot.py | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+2026-02-05 1d016f5 Added timing metrics to README.md
+
+ README.md | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+2026-02-05 771a48f Added a colourbar!
+
+ mandelbrot.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-02-05 3f84770 Added a plot title and added a way to save the figure using plt.savefig()
+
+ .gitignore    |  3 ++-
+ mandelbrot.py | 10 ++++++----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+2026-02-05 aff20b1 Added timing to the mandelbrot set creation, 1024x1024 takes ~40s
+
+ mandelbrot.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+2026-02-05 9a1ea45 Added visualization to the mandelbrot set for 100x100 resolution.
+
+ mandelbrot.py | 44 +++++++++++++++-----------------------------
+ 1 file changed, 15 insertions(+), 29 deletions(-)
+2026-02-05 c7794e4 Implemented mandelbrot without visualizations.
+
+ mandelbrot.py | 50 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
+2026-02-05 8014b3d Added .vscode to .gitignore
+
+ .gitignore | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-02-05 8642580 Added a comment to mandelbrot.py
+
+ mandelbrot.py | 3 +++
+ 1 file changed, 3 insertions(+)
+2026-02-05 02a70c0 Moved files in /mandelbrot to the outer folder.
+
+ mandelbrot/environment.yml => environment.yml | 0
+ mandelbrot/mandelbrot.py => mandelbrot.py     | 0
+ mandelbrot/test_install.py => test_install.py | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+2026-02-05 becd3f6 Added mandelbrot skeleton
+
+ mandelbrot/mandelbrot.py | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+2026-02-05 cb7bbaf Updated .gitignore with python cache and checkpoint files.
+
+ .gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+2026-02-05 4991c9b Added test_install.py to test mamba environment.
+
+ mandelbrot/environment.yml | 184 +++++++++++++++++++++++++++++++++++++++++++++
+ mandelbrot/test_install.py |  23 ++++++
+ 2 files changed, 207 insertions(+)
+2026-02-05 5ee25b8 Initial commit
+
+ .gitignore | 0
+ README.md  | 1 +
+ 2 files changed, 1 insertion(+)

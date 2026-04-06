@@ -1,0 +1,195 @@
+2026-02-26 ec60dff Added a script for comparing float32 and float64 performance with Numba.
+
+ .gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+2026-02-26 5e8b0a6 Added git_log.txt to the .gitignore
+
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+2026-02-26 aad5c3f Added a line for installing the line_profiler package
+
+ test_install.py | 1 +
+ 1 file changed, 1 insertion(+)
+2026-02-26 aa3d79e Readded the benchmark to the naive mandelbrot implementation
+
+ mandelbrot_naive.py | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+2026-02-26 fdc833d Added a document with reflections for the first miniproject
+
+ M1-reflections | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+2026-02-26 47312f0 Added testing of different datatypes to the mandelbrot numba implementation
+
+ mandelbrot_numba.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+2026-02-26 2d16416 Added a dtype parameter to compute_mandelbrot_set() to be able to measure execution time with different types
+
+ mandelbrot_numba.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+2026-02-26 9bb21c5 Hybrid JIT compilation, only the inner loop
+
+ mandelbrot_numba.py | 1 -
+ numba_benchmark.py  | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+2026-02-26 bda9afb Added a numba benchmark script!
+
+ .gitignore         |  5 +++--
+ numba_benchmark.py | 32 ++++++++++++++++++++++++++++++++
+ profiling.py       |  6 +++---
+ 3 files changed, 38 insertions(+), 5 deletions(-)
+2026-02-26 ec6596c Added a script to profile line by line
+
+ .gitignore      |  2 ++
+ line_profile.py | 23 +++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+2026-02-26 f5d2db0 Updated readme with new benchmarking results
+
+ README.md | 7 +++++++
+ 1 file changed, 7 insertions(+)
+2026-02-26 81ca132 Added a parallel JIT compiled version of the mandelbrot implementation.
+
+ mandelbrot_numba_parallel.py | 96 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+2026-02-26 8a6cce3 Added a profiling script and added the profile outputs to the gitignore
+
+ .gitignore   |  1 +
+ profiling.py | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+2026-02-26 bd579ed Added an implmentation of the mandelbrot set using JIT compilation.
+
+ mandelbrot_numba.py | 96 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+2026-02-26 88faedf Added __pycache__ to the gitignore
+
+ .gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2026-02-19 8fb0b8a Added a script that plots time as a function of the mandelbrot resolution.
+
+ mandelbrot_time_scaling.py | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+2026-02-19 866a542 Changed dashes to underscores to be able to import functions from other files more easily.
+
+ mandelbrot-naive.py => mandelbrot_naive.py          |  0
+ ...elbrot-vectorized.py => mandelbrot_vectorized.py |  0
+ memory_layout_performance.py                        | 21 +++++++++++----------
+ 3 files changed, 11 insertions(+), 10 deletions(-)
+2026-02-19 180b07b Added a script to check memory layout performance, utilizing the cache efficiently we get ~8x speedup.
+
+ memory_layout_performance.py | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+2026-02-19 f6c200d Explored some mandelbrot valleys
+
+ mandelbrot-vectorized.py | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+2026-02-19 0d577be Added vectorized timing to README file.
+
+ README.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+2026-02-19 2d591f2 Vectorized implementation time measurement: 1.2566s (median of n=3)
+
+ mandelbrot-vectorized.py | 1 +
+ 1 file changed, 1 insertion(+)
+2026-02-19 34e4d3d Seperated creation of the mesh grid to hold the iterations from mandelbrot computation, to get more accurate time measurements.
+
+ mandelbrot-vectorized.py | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+2026-02-19 2beb90b Added a vectorized implementation using numpy called mandelbrot-vectorized.py
+
+ mandelbrot-vectorized.py | 71 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+2026-02-19 70308e6 Deleted mandelbrot.py
+
+ mandelbrot.py | 82 -----------------------------------------------------------
+ 1 file changed, 82 deletions(-)
+2026-02-19 cbff5b6 Renamed mandelbrot.py to mandelbrot-naive.py
+
+ mandelbrot-naive.py | 95 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+2026-02-11 b37f5c1 Fixed a bug where the resolution of the mandelbrot and julia grids where hard coded to 1024x1024.
+
+ julia.py      | 7 ++++---
+ mandelbrot.py | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+2026-02-11 3720b52 Added type hints to functions in mandelbrot.py and julia.py.
+
+ julia.py      | 4 ++--
+ mandelbrot.py | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+2026-02-11 fe30bf5 Added the plotting improvements from mandelbrot.py in commit b428b6dc893ce8292ac03e63a126f99f8cd3da12 to julia.py
+
+ julia.py | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+2026-02-11 b428b6d Improved the plotting of the Mandelbrot set to enable one to see the complex number that resulted in that amount of iterations. Multiple comments were also made more precise.
+
+ mandelbrot.py | 43 +++++++++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
+2026-02-11 a5f1a1f Added a python script for computing any julia set.
+
+ .gitignore |  4 ++-
+ julia.py   | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 86 insertions(+), 1 deletion(-)
+2026-02-05 73d8e2b Added image of 1024x1024, 100 iterations to README.md
+
+ README.md | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+2026-02-05 a15d216 Added docstrings and changed N_x and N_y to x_res and y_res respectivly.
+
+ mandelbrot.py | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+2026-02-05 1d016f5 Added timing metrics to README.md
+
+ README.md | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+2026-02-05 771a48f Added a colourbar!
+
+ mandelbrot.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-02-05 3f84770 Added a plot title and added a way to save the figure using plt.savefig()
+
+ .gitignore    |  3 ++-
+ mandelbrot.py | 10 ++++++----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+2026-02-05 aff20b1 Added timing to the mandelbrot set creation, 1024x1024 takes ~40s
+
+ mandelbrot.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+2026-02-05 9a1ea45 Added visualization to the mandelbrot set for 100x100 resolution.
+
+ mandelbrot.py | 44 +++++++++++++++-----------------------------
+ 1 file changed, 15 insertions(+), 29 deletions(-)
+2026-02-05 c7794e4 Implemented mandelbrot without visualizations.
+
+ mandelbrot.py | 50 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
+2026-02-05 8014b3d Added .vscode to .gitignore
+
+ .gitignore | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-02-05 8642580 Added a comment to mandelbrot.py
+
+ mandelbrot.py | 3 +++
+ 1 file changed, 3 insertions(+)
+2026-02-05 02a70c0 Moved files in /mandelbrot to the outer folder.
+
+ mandelbrot/environment.yml => environment.yml | 0
+ mandelbrot/mandelbrot.py => mandelbrot.py     | 0
+ mandelbrot/test_install.py => test_install.py | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+2026-02-05 becd3f6 Added mandelbrot skeleton
+
+ mandelbrot/mandelbrot.py | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+2026-02-05 cb7bbaf Updated .gitignore with python cache and checkpoint files.
+
+ .gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+2026-02-05 4991c9b Added test_install.py to test mamba environment.
+
+ mandelbrot/environment.yml | 184 +++++++++++++++++++++++++++++++++++++++++++++
+ mandelbrot/test_install.py |  23 ++++++
+ 2 files changed, 207 insertions(+)
+2026-02-05 5ee25b8 Initial commit
+
+ .gitignore | 0
+ README.md  | 1 +
+ 2 files changed, 1 insertion(+)
