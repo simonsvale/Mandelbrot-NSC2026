@@ -78,12 +78,12 @@ def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[fl
 if __name__ == "__main__":
 
     # The definition of the regions in the x and y direction.
-    x_interval = [-2.0, 1.0]
-    y_interval = [-1.5, 1.5]
+    x_interval = [-0.7530, -0.7490]
+    y_interval = [0.0990, 0.1030]
 
-    x_res = 8192
-    y_res = 8192
-    max_iter = 100
+    x_res = 1024
+    y_res = 1024
+    max_iter = 1000
 
     t, M = benchmark(compute_mandelbrot_set, x_interval, y_interval, x_res, y_res)
 
