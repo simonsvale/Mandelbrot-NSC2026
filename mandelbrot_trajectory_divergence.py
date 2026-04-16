@@ -54,3 +54,11 @@ if __name__ == "__main__":
     plt.colorbar(label="Iterations before divergence")
     plt.title(f"Trajectory divergence (tau={tau})")
     plt.show()
+
+    # Find the number of pixels that diverges before max_iter:
+    total = x_res * y_res
+    div_before_max_iter = (divergence_map < max_iter).sum() # False: 0, True: 1
+
+    divergence_fraction = div_before_max_iter / total
+    N_pixels = total - div_before_max_iter
+    print("Number of pixels diverging before max_iter: ", divergence_fraction, ", in total: ", N_pixels)
