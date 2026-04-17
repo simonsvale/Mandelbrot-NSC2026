@@ -160,6 +160,7 @@ dependencies:
   - qhull=2020.2=hc790b64_5
   - qt6-main=6.10.2=h68b6638_4
   - re2=2025.11.05=ha104f34_0
+  - ruff=0.15.11=h02f8532_0
   - scipy=1.17.0=py311h9c22a71_1
   - setuptools=80.10.2=pyh332efcf_0
   - six=1.17.0=pyhe01879c_1
