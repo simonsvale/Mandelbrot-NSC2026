@@ -6,15 +6,17 @@ import matplotlib.pyplot as plt
 
 @njit(cache=True)
 def mandelbrot_pixel(c_real, c_imag, max_iter):
-    z_real, z_imag = 0, 0
+    z_real = 0.0
+    z_imag = 0.0
 
-    for i in range(max_iter):
-        z_sq = z_real*z_real + z_imag*z_imag
-        if z_sq > 4.0: 
-            return i
+    for iter in range(max_iter):
+
         z_imag_new = 2.0*z_real*z_imag + c_imag
         z_real = z_real*z_real - z_imag*z_imag + c_real
         z_imag = z_imag_new
+
+        if z_real*z_real + z_imag*z_imag > 4.0: 
+            return iter
 
     return max_iter
 
