@@ -1,72 +1,131 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import time, statistics
-from line_profiler import profile
+import time
+import statistics
+from typing import Any
 
-def benchmark(func, *args, n_runs=3):
-    """ Time func , return median of n_runs . 
+
+def benchmark(func: Any, *args: Any, n_runs: int = 3) -> tuple[float, Any]:
     """
-    times = []
+    Jimmy's benchmarking function. Finds the median time of a given input function and its arguments.
+
+    Parameters
+    -----------
+    func : Any
+        A function that should be benchmarked.
+
+    *args : Any
+        The input arguments of the first parameter 'func'.
+
+    n_runs : int
+        The number of runs that should be done before the median time is found.
+
+    Returns
+    --------
+    median_time : float
+        The median time of the n runs of the function.
+
+    result : Any
+        The return value of the input function 'func'.
+    """
+    result: Any = None
+    times: list[float] = []
     for _ in range(n_runs):
-        t0 = time.perf_counter()
-        result = func(*args)
+        t0: float = time.perf_counter()
+        result: Any = func(*args)
         times.append(time.perf_counter() - t0)
-    median_t = statistics.median(times)
-    print(f"Median: {median_t:.4f}s, (min = {min(times):.4f}, max = { max(times):.4f})")
+    median_t: float = float(statistics.median(times))
+    print(f"Median: {median_t:.4f}s, (min = {min(times):.4f}, max = {max(times):.4f})")
     return median_t, result
 
 
-def mandelbrot_point(c: complex, max_iter: int):
+def mandelbrot_point(c: complex, max_iter: int) -> int: # Technically this should be a uint, but python does not have that...
     """
-    Calculates the number of iterations for a single mandelbrot point.
-    
-    :param c: Complex number.
-    :param max_iter: The maximum number of iterations to calculate the mandelbrot point at the complex value c for.
-    """
+    Calculates the number of iterations it takes a single mandelbrot point/pixel to escape.
 
+    Parameters
+    -----------
+    c : complex
+        A complex constant.
+
+    max_iter : int 
+        The maximum number of iterations to calculate the mandelbrot point at the complex value c for.
+
+    Returns
+    --------
+    iter_count : int
+        The number of iterations it takes for the complex number z to be larger than 2.
+    """
     # Base case if we do not converge after the maximum amount of iterations.
-    iter_count = max_iter
+    iter_count: int = max_iter
 
     # Initialize z.
-    z = 0
+    z: complex = 0.0
 
     # Go though all iterations.
-    for n in range(0, max_iter):
-        z = z**2 + c
+    n: int
+    for n in range(max_iter):
+        z: complex = z**2 + c
         
-        if np.abs(z) > 2:
-            iter_count = n
+        # Check if the point/pixel escapes.
+        if abs(z) > 2:
+            iter_count: int = n
             break
 
     return iter_count
 
 
-def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024, max_iter: int = 100):
+def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024, max_iter: int = 100) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-    Computes the Mandelbrot set given a x and y interval, resolution and max iterations per point.
-    
-    :param x_interval: Interval in the x direction.
-    :param y_interval: Interval in the y direction.
-    :param x_res: Resolution in the x direction.
-    :param y_res: Resolution in the y direction.
-    :param max_iter: The maximum iterations to calculate per Mandelbrot point.
-    """
+    Computes the Mandelbrot set given an interval on the real and imaginary axes, 
+    the resolution of the Mandelbrot set in the x and y direction 
+    and the max number of iterations before a point/pixel escapes.
 
+    Parameters
+    -----------
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    x_res : int
+        The resolution of the Mandelbrot set in the horizontal direction.
+    
+    y_res : int
+        The resolution of the Mandelbrot set in the vertical direction.
+
+    max_iter : int 
+        The maximum number of iterations before a point/pixel escapes..
+
+    Returns
+    --------
+    mandelbrot_grid : np.ndarray
+        A numpy array containign the Mandelbrot grid with size: x_res * y_res.
+
+    x_values : np.ndarray
+        A numpy array containing x_res floating point numbers within the x_interval range.
+
+    y_values : np.ndarray
+        A numpy array containing y_res floating point numbers within the y_interval range.    
+    """
     # Generate x_res and y_res uniformly spaced values within the x and y intervals.
-    x_values = np.linspace(x_interval[0], x_interval[1], x_res)
-    y_values = np.linspace(y_interval[0], y_interval[1], y_res)
+    x_values: np.ndarray = np.linspace(x_interval[0], x_interval[1], x_res, dtype=np.float64)
+    y_values: np.ndarray = np.linspace(y_interval[0], y_interval[1], y_res, dtype=np.float64)
 
     # Create a grid for the Mandelbrot set.
-    mandelbrot_grid = np.zeros((x_res, y_res), dtype=np.int32)
+    mandelbrot_grid: np.ndarray = np.zeros((x_res, y_res), dtype=np.int32)
 
     # Go through all points in the region defined by the x and y intervals.
+    i: int
     for i in range(x_res):
+        j: int
         for j in range(y_res):
-            x = x_values[i]
-            y = y_values[j]
+            x: np.float64 = x_values[i]
+            y: np.float64 = y_values[j]
 
-            c = complex(x, y)
-            iter_count = mandelbrot_point(c, max_iter)
+            c: complex = complex(x, y)
+            iter_count: int = mandelbrot_point(c, max_iter)
             mandelbrot_grid[j, i] = iter_count
 
     return mandelbrot_grid, x_values, y_values
@@ -75,12 +134,12 @@ def compute_mandelbrot_set(x_interval: tuple[float, float], y_interval: tuple[fl
 if __name__ == "__main__":
 
     # The definition of the regions in the x and y direction.
-    x_interval = [-2.0, 1.0]
-    y_interval = [-1.5, 1.5]
+    x_interval: tuple[float, float] = (-2.0, 1.0)
+    y_interval: tuple[float, float] = (-1.5, 1.5)
 
-    x_res = 1024
-    y_res = 1024
-    max_iter = 100
+    x_res: int = 1024
+    y_res: int = 1024
+    max_iter: int = 100
 
     t, M = benchmark(compute_mandelbrot_set, x_interval, y_interval, x_res, y_res)
     
@@ -91,3 +150,5 @@ if __name__ == "__main__":
     plt.colorbar(image, orientation='vertical')
     plt.savefig("mandelbrot_set.png")
     plt.show()
+
+    # ruff check mandelbrot_naive.py
