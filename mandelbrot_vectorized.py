@@ -48,11 +48,11 @@ def compute_mandelbrot_set(Z: np.ndarray[np.complex128], C: np.ndarray[np.comple
     
     :param max_iter: The maximum iterations to calculate per Mandelbrot point.
     """
-
+    mask = np.full(Z.shape, True)
     # Go through all points in the meshgrid.
     for _ in range(max_iter):
-        mask = np.abs(Z) <= 2
         Z[mask] = Z[mask]**2 + C[mask]
+        mask = np.abs(Z) <= 2
         M[mask] += 1
 
     return M
