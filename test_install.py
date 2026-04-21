@@ -1,6 +1,6 @@
 # mamba create -n nsc2026 python=3.11
 # mamba activate nsc2026
-# mamba install numpy matplotlib scipy numba pytest pytest-cov dask python-graphviz line_profiler ruff
+# mamba install numpy matplotlib scipy numba pytest pytest-cov dask python-graphviz line_profiler ruff pyopencl
 
 # mamba env export > environment.yml
 
