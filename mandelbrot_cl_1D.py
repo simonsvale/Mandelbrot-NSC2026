@@ -137,10 +137,9 @@ if __name__ == "__main__":
     print("GPU median time: ", s_median)
 
     # Copy from host to device.
-    cl.enqueue_copy(queue, host_grid, dev_grid)
-    queue.finish()
+    cl.enqueue_copy(queue, host_grid, dev_grid, is_blocking=True)
 
     # Reshape from N * N to (N, N) and display.
     grid = host_grid.reshape(N, N)
-    plt.imshow(grid)
-    plt.show()
+    #plt.imshow(grid)
+    #plt.show()
