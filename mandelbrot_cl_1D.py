@@ -35,8 +35,8 @@ def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
             }
         }
     }
-                         
-    __kernel void mandelbrotPixel64(__global float *cReal, __global float *cImag, __global int *grid, const int MaximumIterations, const int N) {
+
+    __kernel void mandelbrotPixel64(__global double *cReal, __global double *cImag, __global int *grid, const int MaximumIterations, const int N) {
 
         // Get id.            
         int idx = get_global_id(0);
@@ -53,7 +53,7 @@ def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
 
         for (int iter = 0; iter <= MaximumIterations; iter++) {
                         
-            zImagNew = (2.0 * zReal * zImag) + cImag[ci_idx];
+            zImagNew = (2.0f * zReal * zImag) + cImag[ci_idx];
             zReal = (zReal*zReal) - (zImag*zImag) + cReal[cr_idx];
             zImag = zImagNew;
 
@@ -93,6 +93,7 @@ if __name__ == "__main__":
     max_iter = np.int32(100)
     host_grid = np.zeros(N*N, dtype=np.int32)
 
+    # Set floating point precision.
     float_type = np.float32
 
     if float_type == np.float32:
@@ -141,5 +142,5 @@ if __name__ == "__main__":
 
     # Reshape from N * N to (N, N) and display.
     grid = host_grid.reshape(N, N)
-    #plt.imshow(grid)
-    #plt.show()
+    plt.imshow(grid)
+    plt.show()
