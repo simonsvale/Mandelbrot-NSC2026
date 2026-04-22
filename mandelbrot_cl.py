@@ -1,6 +1,7 @@
 import pyopencl as cl
 import numpy as np
 import matplotlib.pyplot as plt
+import time, statistics
 
 
 def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     program = get_mandelbrot_program(context)
     
     # Setup buffers.
-    N = 1024
+    N = 8192
     work_size = (N * N)
 
     max_iter = np.int32(100)
@@ -81,17 +82,28 @@ if __name__ == "__main__":
     # Create the kernel from the program.
     kernel = program.mandelbrotPixel
     #local_size = 8
-    kernel(queue, host_grid.shape, None, dev_c_real, dev_c_imag, dev_grid, max_iter, np.int32(N))
-    queue.finish()
+
+    runs = 5
+
+    time_list = []
+    for _ in range(runs):
+        t_s = time.perf_counter()
+        kernel(queue, host_grid.shape, None, dev_c_real, dev_c_imag, dev_grid, max_iter, np.int32(N))
+        queue.finish()
+        t_e = time.perf_counter()
+        time_list.append(t_e - t_s)
+    s_median = statistics.median(time_list)
+    print("GPU median time: ", s_median)
 
     # Copy from host to device.
     cl.enqueue_copy(queue, host_grid, dev_grid)
+    queue.finish()
 
     # Reshape from N * N to (N, N)
     grid = host_grid.reshape(N, N)
 
     # Display grid.
-    plt.imshow(grid)
-    plt.show()
+    #plt.imshow(grid)
+    #plt.show()
 
     
