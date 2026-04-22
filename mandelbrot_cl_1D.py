@@ -110,7 +110,7 @@ if __name__ == "__main__":
     host_c_imag: np.ndarray = np.linspace(y_interval[0], y_interval[1], N, dtype=float_type)
     
     # Grid containing the iterations.
-    dev_grid = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, size=host_grid.nbytes)
+    dev_grid = cl.Buffer(context, cl.mem_flags.HOST_READ_ONLY, size=host_grid.nbytes)
     dev_c_real = cl.Buffer(context, cl.mem_flags.HOST_WRITE_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=host_c_real)
     dev_c_imag = cl.Buffer(context, cl.mem_flags.HOST_WRITE_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=host_c_imag)
 
@@ -140,9 +140,7 @@ if __name__ == "__main__":
     cl.enqueue_copy(queue, host_grid, dev_grid)
     queue.finish()
 
-    # Reshape from N * N to (N, N)
+    # Reshape from N * N to (N, N) and display.
     grid = host_grid.reshape(N, N)
-
-    # Display grid.
     plt.imshow(grid)
     plt.show()
