@@ -6,7 +6,7 @@ import time, statistics
 
 def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
 
-    program = cl.Program(ctx, """
+    program = cl.Program(ctx, """             
     __kernel void mandelbrotPixel32(__global float *cReal, __global float *cImag, __global int *grid, const int MaximumIterations, const int N) {
 
         // Get id.            
@@ -53,7 +53,7 @@ def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
 
         for (int iter = 0; iter <= MaximumIterations; iter++) {
                         
-            zImagNew = (2.0f * zReal * zImag) + cImag[ci_idx];
+            zImagNew = (2.0 * zReal * zImag) + cImag[ci_idx];
             zReal = (zReal*zReal) - (zImag*zImag) + cReal[cr_idx];
             zImag = zImagNew;
 
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     host_grid = np.zeros(N*N, dtype=np.int32)
 
     # Set floating point precision.
-    float_type = np.float32
+    float_type = np.float64
 
     if float_type == np.float32:
         implementation_type = "mandelbrotPixel32"
