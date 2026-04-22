@@ -121,7 +121,7 @@ if __name__ == "__main__":
     dev_c_real.release()
 
     # Display grid.
-    plt.imshow(host_grid)
-    plt.show()
+    #plt.imshow(host_grid)
+    #plt.show()
 
     
