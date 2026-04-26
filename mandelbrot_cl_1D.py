@@ -8,7 +8,9 @@ from numpy.typing import NDArray
 
 def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
 
-    program = cl.Program(ctx, """             
+    program = cl.Program(ctx, """      
+    #pragma OPENCL EXTENSION cl_khr_fp64 : enable         
+
     __kernel void mandelbrotPixel32(__global float *cReal, __global float *cImag, __global int *grid, const int MaximumIterations, const int N) {
 
         // Get id.            
@@ -148,7 +150,7 @@ if __name__ == "__main__":
     # Setup variables.
     N = np.int32(8192)
     max_iter = np.int32(100)
-    dtype: np.float32 = np.float32
+    dtype = np.float32
     x_interval: tuple[float, float] = (-2.0, 1.0)
     y_interval: tuple[float, float] = (-1.5, 1.5)
     
@@ -156,7 +158,7 @@ if __name__ == "__main__":
     # I don't think this matters if a GPU is not available.
     grid = compute_mandelbrot(context, queue, program, x_interval, y_interval, N, max_iter, dtype)
 
-    runs = 200
+    runs = 50
     time_list = []
     for _ in range(runs):
         t_s = time.perf_counter()
@@ -167,5 +169,5 @@ if __name__ == "__main__":
     print("GPU median time: ", s_median)
 
     # Show mandelbrot set.
-    plt.imshow(grid)
-    plt.show()
+    #plt.imshow(grid)
+    #plt.show()
