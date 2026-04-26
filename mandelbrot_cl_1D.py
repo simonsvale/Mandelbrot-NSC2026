@@ -2,6 +2,8 @@ import pyopencl as cl
 import numpy as np
 import matplotlib.pyplot as plt
 import time, statistics
+from numpy.typing import NDArray
+
 
 
 def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
@@ -69,6 +71,61 @@ def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
     return program
 
 
+def compute_mandelbrot(
+        context: cl.Context, 
+        queue: cl.CommandQueue, 
+        program: cl.Program, 
+        x_interval: tuple[float, float], 
+        y_interval: tuple[float, float], 
+        N: np.int32, 
+        max_iter: np.int32, 
+        dtype: np.float32 | np.float64
+    ) -> NDArray[np.int32]:
+
+    if dtype == np.float32:
+        implementation_type = "mandelbrotPixel32"
+    elif dtype == np.float64:
+        implementation_type = "mandelbrotPixel64"
+    else:
+        raise NotImplemented("Only float32 and float64 (double) has been implemented!")
+    
+    # Create output grid.
+    host_grid = np.zeros(N*N, dtype=np.int32)
+
+    # Create linspace.
+    host_c_real: np.ndarray = np.linspace(x_interval[0], x_interval[1], N, dtype=dtype)
+    host_c_imag: np.ndarray = np.linspace(y_interval[0], y_interval[1], N, dtype=dtype)
+    
+    # Grid containing the iterations.
+    dev_grid = cl.Buffer(context, cl.mem_flags.HOST_READ_ONLY, size=host_grid.nbytes)
+
+    # Grid containing the real and imaginary part of the complex constant C.
+    dev_c_real = cl.Buffer(context, cl.mem_flags.HOST_WRITE_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=host_c_real)
+    dev_c_imag = cl.Buffer(context, cl.mem_flags.HOST_WRITE_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=host_c_imag)
+
+    # Create the kernel from the program, this has to be done during runtime.
+    kernel = cl.Kernel(program, implementation_type)
+    kernel.set_arg(0, dev_c_real)
+    kernel.set_arg(1, dev_c_imag)
+    kernel.set_arg(2, dev_grid)
+    kernel.set_arg(3, max_iter)
+    kernel.set_arg(4, N)
+
+    global_work_size = (int(N) * int(N),)
+    local_work_size = (128,) # 128 is the best.
+
+    cl.enqueue_nd_range_kernel(queue, kernel, global_work_size, local_work_size)
+    queue.finish()
+
+    # Copy from host to device.
+    cl.enqueue_copy(queue, host_grid, dev_grid, is_blocking=True)
+
+    # Reshape from N * N to (N, N) and display.
+    grid = host_grid.reshape(N, N)
+
+    return grid
+
+
 if __name__ == "__main__":
 
     # Get the platforms
@@ -87,65 +144,28 @@ if __name__ == "__main__":
 
     # Create CL program.
     program = get_mandelbrot_program(context)
-    
-    # Setup Mandelbrot variables.
+
+    # Setup variables.
     N = np.int32(8192)
     max_iter = np.int32(100)
-    host_grid = np.zeros(N*N, dtype=np.int32)
-
-    # Set floating point precision.
-    float_type = np.float32
-
-    if float_type == np.float32:
-        implementation_type = "mandelbrotPixel32"
-    elif float_type == np.float64:
-        implementation_type = "mandelbrotPixel64"
-    else:
-        raise NotImplemented("Only float32 and float64 (double) has been implemented!")
-
-    # Create linspace.
+    dtype: np.float32 = np.float32
     x_interval: tuple[float, float] = (-2.0, 1.0)
     y_interval: tuple[float, float] = (-1.5, 1.5)
-
-    host_c_real: np.ndarray = np.linspace(x_interval[0], x_interval[1], N, dtype=float_type)
-    host_c_imag: np.ndarray = np.linspace(y_interval[0], y_interval[1], N, dtype=float_type)
     
-    # Grid containing the iterations.
-    dev_grid = cl.Buffer(context, cl.mem_flags.HOST_READ_ONLY, size=host_grid.nbytes)
-    dev_c_real = cl.Buffer(context, cl.mem_flags.HOST_WRITE_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=host_c_real)
-    dev_c_imag = cl.Buffer(context, cl.mem_flags.HOST_WRITE_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=host_c_imag)
-
-    # Create the kernel from the program.
-    kernel = cl.Kernel(program, implementation_type)
-    kernel.set_arg(0, dev_c_real)
-    kernel.set_arg(1, dev_c_imag)
-    kernel.set_arg(2, dev_grid)
-    kernel.set_arg(3, max_iter)
-    kernel.set_arg(4, N)
-
-    global_work_size = (int(N) * int(N),)
-    local_work_size = (128,) # 128 is the best.
-
     # Warmup using JIT, Nvidia uses NVCC. I think it is HIP if AMD is used.
     # I don't think this matters if a GPU is not available.
-    cl.enqueue_nd_range_kernel(queue, kernel, global_work_size, local_work_size)
-    queue.finish()
+    grid = compute_mandelbrot(context, queue, program, x_interval, y_interval, N, max_iter, dtype)
 
-    runs = 5
+    runs = 200
     time_list = []
     for _ in range(runs):
         t_s = time.perf_counter()
-        cl.enqueue_nd_range_kernel(queue, kernel, global_work_size, local_work_size)
-        queue.finish()
+        grid = compute_mandelbrot(context, queue, program, x_interval, y_interval, N, max_iter, dtype)
         t_e = time.perf_counter()
         time_list.append(t_e - t_s)
     s_median = statistics.median(time_list)
     print("GPU median time: ", s_median)
 
-    # Copy from host to device.
-    cl.enqueue_copy(queue, host_grid, dev_grid, is_blocking=True)
-
-    # Reshape from N * N to (N, N) and display.
-    grid = host_grid.reshape(N, N)
+    # Show mandelbrot set.
     plt.imshow(grid)
     plt.show()
