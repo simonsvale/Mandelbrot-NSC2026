@@ -5,10 +5,22 @@ import time, statistics
 from numpy.typing import NDArray
 
 
+def get_mandelbrot_program(context: cl.Context) -> cl.Program:
+    """
+    Computes the Mandelbrot set using OpenCL given an interval on the real and imaginary axes, 
+    the resolution of the Mandelbrot set N, the max number of iterations before a point/pixel escapes and the floating point type to use.
 
-def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
+    Parameters
+    -----------
+    context : cl.Context
+        An OpenCL context.
 
-    program = cl.Program(ctx, """      
+    Returns
+    --------
+    program : cl.Program
+        An OpenCL program that context the mandelbrot pixel kernel for both float32 and float64.
+    """
+    program = cl.Program(context, """      
     #pragma OPENCL EXTENSION cl_khr_fp64 : enable         
 
     __kernel void mandelbrotPixel32(__global float *cReal, __global float *cImag, __global int *grid, const int MaximumIterations, const int N) {
@@ -83,7 +95,38 @@ def compute_mandelbrot(
         max_iter: np.int32, 
         dtype: np.float32 | np.float64
     ) -> NDArray[np.int32]:
+    """
+    Computes the Mandelbrot set using OpenCL given an interval on the real and imaginary axes, 
+    the resolution of the Mandelbrot set N, the max number of iterations before a point/pixel escapes and the floating point type to use.
 
+    Parameters
+    -----------
+    context : cl.Context
+        An OpenCL context.
+
+    queue : cl.CommandQueue
+        An OpenCL command queue.
+
+    program : cl.Program
+        An OpenCL program.
+
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    N : np.int32
+        The resolution of the mandelbrot set on the x- and y-axis.
+
+    max_iter : np.int32
+        The maximum number of iterations before a point/pixel escapes..
+
+    Returns
+    --------
+    grid : NDArray[np.int32]
+        A numpy array containing the Mandelbrot grid with the shape: (N, N).
+    """
     if dtype == np.float32:
         implementation_type = "mandelbrotPixel32"
     elif dtype == np.float64:
