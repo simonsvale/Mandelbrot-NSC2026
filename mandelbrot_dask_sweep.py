@@ -42,7 +42,7 @@ def mandelbrot_pixel(c_real: float, c_imag: float, max_iter: int) -> int:
 
 
 @njit(cache=True)
-def mandelbrot_chunk(row_start: int, row_end: int, N: int, x_interval: tuple[int, int], y_interval: tuple[int, int], max_iter: int) -> np.ndarray:
+def mandelbrot_chunk(row_start: int, row_end: int, N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int) -> np.ndarray:
     """
     Computes a mandelbrot chunk using a start and end of a row as well as the resolution and x and y intervals of the mandelbrot set.
 
@@ -87,7 +87,7 @@ def mandelbrot_chunk(row_start: int, row_end: int, N: int, x_interval: tuple[int
     return result
 
 
-def mandelbrot_dask(N: int, x_interval: tuple[int, int], y_interval: tuple[int, int], max_iter: int=100, n_chunks: int=32) -> np.ndarray:
+def mandelbrot_dask(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int=100, n_chunks: int=32) -> np.ndarray:
     """
     Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
 
@@ -204,7 +204,7 @@ def calculate_speedup(Tp: float, T1: float) -> float:
     return speedup
 
 
-def mandelbrot_serial(N: int, x_interval: tuple[int, int], y_interval: tuple[int, int], max_iter: int=100) -> np.ndarray:
+def mandelbrot_serial(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int=100) -> np.ndarray:
     """
     Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
     The serial version.
@@ -231,7 +231,7 @@ def mandelbrot_serial(N: int, x_interval: tuple[int, int], y_interval: tuple[int
     return mandelbrot_chunk(0, N, N, x_interval, y_interval, max_iter)
 
 
-def sweep(N: int, x_interval: tuple[int, int], y_interval: tuple[int, int], n_chunks_list: list[int], T1: float, p: int, max_iter: int=100, run_count: int = 3) -> np.ndarray:
+def sweep(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], n_chunks_list: list[int], T1: float, p: int, max_iter: int=100, run_count: int = 3) -> np.ndarray:
     """
     Performs a sweep across number of chunks used. Returns the speedup, LIF and parallel execution time along with the number of chunks used.
 
@@ -295,8 +295,8 @@ if __name__ == "__main__":
     np.set_printoptions(suppress=True)
 
     # The definition of the regions in the x and y direction.
-    x_interval = [-2.0, 1.0]
-    y_interval = [-1.5, 1.5]
+    x_interval = (-2.0, 1.0)
+    y_interval = (-1.5, 1.5)
 
     N = 8192
     max_iter = 100

@@ -8,7 +8,26 @@ import time, statistics, dask, psutil
 
 
 @njit(cache=True)
-def mandelbrot_pixel(c_real, c_imag, max_iter):
+def mandelbrot_pixel(c_real: float, c_imag: float, max_iter: int) -> int:
+    """
+    Computes the mandelbrot pixel given a complex constant C's real and imaginary parts along with the maximum number of iterations before escaping.
+
+    Parameters
+    -----------
+    c_real : int
+        The real part of the complex constant C.
+
+    c_imag : int
+        The imaginary part of the complex constant C.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    iter : int
+        The number of iterations before escaping.
+    """
     z_real, z_imag = 0, 0
 
     for i in range(max_iter):
@@ -23,8 +42,35 @@ def mandelbrot_pixel(c_real, c_imag, max_iter):
 
 
 @njit(cache=True)
-def mandelbrot_chunk(row_start, row_end, N, x_interval, y_interval, max_iter):
+def mandelbrot_chunk(row_start: int, row_end: int, N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int) -> np.ndarray:
+    """
+    Computes a mandelbrot chunk using a start and end of a row as well as the resolution and x and y intervals of the mandelbrot set.
 
+    Parameters
+    -----------
+    row_start : int
+        The row where the mandelbrot chunk starts.
+
+    row_end : int
+        The row where the mandelbrot chunk ends.
+
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    result : np.ndarray
+        The mandelbrot chunk that was computed for a number of rows.
+    """
     x_min, x_max = x_interval[0], x_interval[1]
     y_min, y_max = y_interval[0], y_interval[1]
 
@@ -41,7 +87,35 @@ def mandelbrot_chunk(row_start, row_end, N, x_interval, y_interval, max_iter):
     return result
 
 
-def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
+def mandelbrot_dask(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int=100, n_chunks: int=32) -> np.ndarray:
+    """
+    Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
+
+    Parameters
+    -----------
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    n_chunks : int
+        The number of chunks partition the mandelbrot set into.
+
+    Returns
+    --------
+    mandelbrot_grid : np.ndarray
+        The computed mandelbrot set.
+
+    exec_time : float
+        The amount of time it took to execute.
+    """
     # Ensure that the chunk size is not below 1.
     chunk_size = max(1, N // n_chunks)
     dask_tasks = []
@@ -67,15 +141,38 @@ def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
     return np.vstack(mandelbrot_grid), exec_time
 
 
-def mandelbrot_serial(N, x_interval, y_interval, max_iter=100):
+def mandelbrot_serial(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int=100) -> np.ndarray:
+    """
+    Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
+    The serial version.
+
+    Parameters
+    -----------
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    mandelbrot_grid : np.ndarray
+        The computed mandelbrot set.
+    """
     return mandelbrot_chunk(0, N, N, x_interval, y_interval, max_iter)
 
 
 if __name__ == "__main__":
 
     # The definition of the regions in the x and y direction.
-    x_interval = [-2.0, 1.0]
-    y_interval = [-1.5, 1.5]
+    x_interval = (-2.0, 1.0)
+    y_interval = (-1.5, 1.5)
 
     N = 8192
     max_iter = 100
