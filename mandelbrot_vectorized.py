@@ -1,11 +1,34 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import time, statistics
+from typing import Any
+from numpy.typing import NDArray
 
 
-def benchmark(func, *args, n_runs=3):
-    """ Time func , return median of n_runs . 
+def benchmark(func: Any, *args: Any, n_runs: int = 3) -> tuple[float, Any]:
     """
+    Jimmy's benchmarking function. Finds the median time of a given input function and its arguments.
+
+    Parameters
+    -----------
+    func : Any
+        A function that should be benchmarked.
+
+    *args : Any
+        The input arguments of the first parameter 'func'.
+
+    n_runs : int
+        The number of runs that should be done before the median time is found.
+
+    Returns
+    --------
+    median_time : float
+        The median time of the n runs of the function.
+
+    result : Any
+        The return value of the input function 'func'.
+    """
+    result: Any = None
     times = []
     for _ in range(n_runs):
         t0 = time.perf_counter()
@@ -16,14 +39,45 @@ def benchmark(func, *args, n_runs=3):
     return median_t, result
 
 
-def setup_variables(x_interval: tuple[float, float], y_interval: tuple[float, float], x_res: int = 1024, y_res: int = 1024):
+def setup_variables(
+    x_interval: tuple[float, float], 
+    y_interval: tuple[float, float], 
+    x_res: int = 1024, 
+    y_res: int = 1024
+) -> tuple[NDArray[np.complex128], NDArray[np.complex128], NDArray[np.int32], NDArray[np.float64], NDArray[np.float64]]:
     """
-    Setup variables for computing the mandelbrot set.
+    Setups arrays that are used to compute the vectorized mandelbrot set.
 
-    :param x_interval: Interval in the x direction.
-    :param y_interval: Interval in the y direction.
-    :param x_res: Resolution in the x direction.
-    :param y_res: Resolution in the y direction.
+    Parameters
+    -----------
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    x_res : int
+        The resolution of the Mandelbrot set in the horizontal direction.
+    
+    y_res : int
+        The resolution of the Mandelbrot set in the vertical direction.
+
+    Returns
+    --------
+    Z : NDArray[np.complex128]
+        An array containing the complex numbers that should be accumulated over max_iter.
+
+    C : NDArray[np.complex128]
+        An array of complex constants.
+
+    M : NDArray[np.int32]
+        The array that will contain the mandelbrot set.
+
+    x_values : NDArray[np.float64]
+        An array containing the real values of the complex constant array C.
+
+    y_values : NDArray[np.float64]
+        An array containing the imaginary values of the complex constant array C.
     """
     # Generate x_res and y_res uniformly spaced values within the x and y intervals.
     x_values = np.linspace(x_interval[0], x_interval[1], x_res)
@@ -42,11 +96,28 @@ def setup_variables(x_interval: tuple[float, float], y_interval: tuple[float, fl
     return Z, C, M, x_values, y_values
 
 
-def compute_mandelbrot_set(Z: np.ndarray[np.complex128], C: np.ndarray[np.complex128], M: np.ndarray[int], max_iter: int = 100):
+def compute_mandelbrot_set(Z: NDArray[np.complex128], C: NDArray[np.complex128], M: NDArray[np.int32], max_iter: int=100) -> NDArray[np.int32]:
     """
-    Computes the Mandelbrot set given a x and y interval, resolution and max iterations per point.
-    
-    :param max_iter: The maximum iterations to calculate per Mandelbrot point.
+    Computes the mandelbrot set using NumPy.
+
+    Parameters
+    -----------
+    Z : NDArray[np.complex128]
+        An array containing the complex numbers that should be accumulated over max_iter.
+
+    C : NDArray[np.complex128]
+        An array of complex constants.
+
+    M : NDArray[np.int32]
+        The array that will contain the mandelbrot set.
+
+    max_iter : int
+        The maximum number of iterations before a point/pixel escapes.
+
+    Returns
+    --------
+    M : NDArray[np.int32]
+        The mandelbrot set.
     """
     mask = np.full(Z.shape, True)
     # Go through all points in the meshgrid.
@@ -61,8 +132,8 @@ def compute_mandelbrot_set(Z: np.ndarray[np.complex128], C: np.ndarray[np.comple
 if __name__ == "__main__":
 
     # The definition of the regions in the x and y direction.
-    x_interval = [-2.0, 1.0]
-    y_interval = [-1.5, 1.5]
+    x_interval = (-2.0, 1.0)
+    y_interval = (-1.5, 1.5)
 
     """
     # Deep seahorse valley
