@@ -1,13 +1,35 @@
 import time, statistics
+from typing import Any
 
 from mandelbrot_naive import compute_mandelbrot_set as naive_mb
 from mandelbrot_vectorized import compute_mandelbrot_set as v_mb
 from mandelbrot_vectorized import setup_variables
 from mandelbrot_numba import compute_mandelbrot_set as nb_mb
 
-def benchmark(func, *args, n_runs=3):
-    """ Time func , return median of n_runs . 
+def benchmark(func: Any, *args: Any, n_runs: int = 3) -> tuple[float, Any]:
     """
+    Jimmy's benchmarking function. Finds the median time of a given input function and its arguments.
+
+    Parameters
+    -----------
+    func : Any
+        A function that should be benchmarked.
+
+    *args : Any
+        The input arguments of the first parameter 'func'.
+
+    n_runs : int
+        The number of runs that should be done before the median time is found.
+
+    Returns
+    --------
+    median_time : float
+        The median time of the n runs of the function.
+
+    result : Any
+        The return value of the input function 'func'.
+    """
+    result: Any = None
     times = []
     for _ in range(n_runs):
         t0 = time.perf_counter()
@@ -19,8 +41,8 @@ def benchmark(func, *args, n_runs=3):
 
 
 if __name__ == "__main__":
-    x_interval = [-2.0, 1.0]
-    y_interval = [-1.5, 1.5]
+    x_interval = (-2.0, 1.0)
+    y_interval = (-1.5, 1.5)
     x_res = 1024
     y_res = 1024
     max_iter = 100
