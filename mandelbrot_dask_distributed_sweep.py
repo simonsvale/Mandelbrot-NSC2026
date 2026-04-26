@@ -115,6 +115,9 @@ def mandelbrot_dask(N: int, x_interval: tuple[int, int], y_interval: tuple[int, 
     --------
     mandelbrot_grid : np.ndarray
         The computed mandelbrot set.
+
+    exec_time : float
+        The amount of time it took to execute.
     """
     # Ensure that the chunk size is not below 1.
     chunk_size = max(1, N // n_chunks)
