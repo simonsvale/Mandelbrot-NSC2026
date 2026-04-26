@@ -94,7 +94,7 @@ if __name__ == "__main__":
     host_grid = np.zeros(N*N, dtype=np.int32)
 
     # Set floating point precision.
-    float_type = np.float64
+    float_type = np.float32
 
     if float_type == np.float32:
         implementation_type = "mandelbrotPixel32"
@@ -125,6 +125,11 @@ if __name__ == "__main__":
 
     global_work_size = (int(N) * int(N),)
     local_work_size = (128,) # 128 is the best.
+
+    # Warmup using JIT, Nvidia uses NVCC. I think it is HIP if AMD is used.
+    # I don't think this matters if a GPU is not available.
+    cl.enqueue_nd_range_kernel(queue, kernel, global_work_size, local_work_size)
+    queue.finish()
 
     runs = 5
     time_list = []
