@@ -5,7 +5,20 @@ import time, statistics, math
 
 
 def get_mandelbrot_program(ctx: cl.Context) -> cl.Program:
+    """
+    Computes the Mandelbrot set using OpenCL given an interval on the real and imaginary axes, 
+    the resolution of the Mandelbrot set N, the max number of iterations before a point/pixel escapes and the floating point type to use.
 
+    Parameters
+    -----------
+    context : cl.Context
+        An OpenCL context.
+
+    Returns
+    --------
+    program : cl.Program
+        An OpenCL program with the mandelbrot pixel kernel.
+    """
     program = cl.Program(ctx, """
     __kernel void mandelbrotPixel(__global float *cReal, __global float *cImag, __global int *grid, const int MaximumIterations, const int N) {
 
