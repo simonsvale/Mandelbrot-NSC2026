@@ -5,7 +5,26 @@ import time, statistics, psutil
 import matplotlib.pyplot as plt
 
 @njit(cache=True)
-def mandelbrot_pixel(c_real, c_imag, max_iter):
+def mandelbrot_pixel(c_real: float, c_imag: float, max_iter: int) -> int:
+    """
+    Computes the mandelbrot pixel given a complex constant C's real and imaginary parts along with the maximum number of iterations before escaping.
+
+    Parameters
+    -----------
+    c_real : int
+        The real part of the complex constant C.
+
+    c_imag : int
+        The imaginary part of the complex constant C.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    iter : int
+        The number of iterations before escaping.
+    """
     z_real = 0.0
     z_imag = 0.0
 
@@ -22,7 +41,41 @@ def mandelbrot_pixel(c_real, c_imag, max_iter):
 
 
 @njit(cache=True)
-def mandelbrot_chunk(row_start, row_end, N, x_min, x_max, y_min, y_max, max_iter):
+def mandelbrot_chunk(row_start: int, row_end: int, N: int, x_min: float, x_max: float, y_min: float, y_max: float, max_iter: int) -> np.ndarray:
+    """
+    Computes a mandelbrot chunk using a start and end of a row as well as the resolution and x and y intervals of the mandelbrot set.
+
+    Parameters
+    -----------
+    row_start : int
+        The row where the mandelbrot chunk starts.
+
+    row_end : int
+        The row where the mandelbrot chunk ends.
+
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_min : float
+        The minimum value on the real axis (x).
+
+    x_max : float
+        The maximum value on the real axis (x).
+
+    y_min : float
+        The minimum value on the imaginary axis (y).
+
+    y_max : float
+        The maximum value on the imaginary axis (y).
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    out : np.ndarray
+        The mandelbrot chunk that was computed for a number of rows.
+    """
     out = np.empty((row_end - row_start, N), dtype=np.int32)
     dx = (x_max - x_min) / N
     dy = (y_max - y_min) / N
@@ -33,15 +86,91 @@ def mandelbrot_chunk(row_start, row_end, N, x_min, x_max, y_min, y_max, max_iter
     return out
 
 
-def mandelbrot_serial(N, x_min, x_max, y_min, y_max, max_iter=100):
+def mandelbrot_serial(N: int, x_min: float, x_max: float, y_min: float, y_max: float, max_iter: int=100) -> np.ndarray:
+    """
+    Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
+    The serial version.
+
+    Parameters
+    -----------
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_min : float
+        The minimum value on the real axis (x).
+
+    x_max : float
+        The maximum value on the real axis (x).
+
+    y_min : float
+        The minimum value on the imaginary axis (y).
+
+    y_max : float
+        The maximum value on the imaginary axis (y).
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    mandelbrot_grid : np.ndarray
+        The computed mandelbrot set.
+    """
     return mandelbrot_chunk(0, N, N, x_min, x_max, y_min, y_max, max_iter)
 
 
-def _worker(args):
+def _worker(args) -> np.ndarray:
+    """
+    The multiprocessing worker.
+
+    Parameters
+    -----------
+    args : args
+        The arguments for the worker.
+    Returns
+    --------
+    mandelbrot_chunk : np.ndarray
+        The mandelbrot chunk that was computed for a number of rows.
+    """
     return mandelbrot_chunk(*args)
 
 
-def mandelbrot_parallel(N, x_min, x_max, y_min, y_max, max_iter=100, n_workers=4):
+def mandelbrot_parallel(N: int, x_min: float, x_max: float, y_min: float, y_max: float, max_iter: int=100, n_workers: int=4) -> tuple[np.ndarray, float]:
+    """
+    Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
+    The serial version.
+
+    Parameters
+    -----------
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_min : float
+        The minimum value on the real axis (x).
+
+    x_max : float
+        The maximum value on the real axis (x).
+
+    y_min : float
+        The minimum value on the imaginary axis (y).
+
+    y_max : float
+        The maximum value on the imaginary axis (y).
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    n_workers : int
+        The number of workers that should be used to compute the mandelbrot set.
+
+    Returns
+    --------
+    parts : np.ndarray
+        The computed mandelbrot set.
+
+    exec_time : float
+        The amount of time it took to execute.
+    """
     chunk_size = max(1, N // n_workers)
     chunks, row = [], 0
 
@@ -63,15 +192,15 @@ def mandelbrot_parallel(N, x_min, x_max, y_min, y_max, max_iter=100, n_workers=4
 
 
 if __name__ == "__main__":
-    x_interval = [-2.0, 1.0]
-    y_interval = [-1.5, 1.5]
+    x_interval = (-2.0, 1.0)
+    y_interval = (-1.5, 1.5)
 
     N = 8192
     max_iter = 100
 
     runs = 3
 
-    core_count = psutil.cpu_count(logical=True)
+    core_count: int = psutil.cpu_count(logical=True)
 
     s_time_list = []
     for _ in range(runs):
