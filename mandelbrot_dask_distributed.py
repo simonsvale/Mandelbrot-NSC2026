@@ -11,7 +11,26 @@ import time, statistics, dask, psutil, math
 # dask worker 10.92.0.243:8786 --nworkers -1 --nthreads 1
 
 @njit(cache=True)
-def mandelbrot_pixel(c_real, c_imag, max_iter):
+def mandelbrot_pixel(c_real: float, c_imag: float, max_iter: int) -> int:
+    """
+    Computes the mandelbrot pixel given a complex constant C's real and imaginary parts along with the maximum number of iterations before escaping.
+
+    Parameters
+    -----------
+    c_real : int
+        The real part of the complex constant C.
+
+    c_imag : int
+        The imaginary part of the complex constant C.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    iter : int
+        The number of iterations before escaping.
+    """
     z_real, z_imag = 0, 0
 
     for i in range(max_iter):
@@ -26,8 +45,35 @@ def mandelbrot_pixel(c_real, c_imag, max_iter):
 
 
 @njit(cache=True)
-def mandelbrot_chunk(row_start, row_end, N, x_interval, y_interval, max_iter):
+def mandelbrot_chunk(row_start: int, row_end: int, N: int, x_interval: tuple[int, int], y_interval: tuple[int, int], max_iter: int) -> np.ndarray:
+    """
+    Computes a mandelbrot chunk using a start and end of a row as well as the resolution and x and y intervals of the mandelbrot set.
 
+    Parameters
+    -----------
+    row_start : int
+        The row where the mandelbrot chunk starts.
+
+    row_end : int
+        The row where the mandelbrot chunk ends.
+
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    result : np.ndarray
+        The mandelbrot chunk that was computed for a number of rows.
+    """
     x_min, x_max = x_interval[0], x_interval[1]
     y_min, y_max = y_interval[0], y_interval[1]
 
@@ -44,7 +90,35 @@ def mandelbrot_chunk(row_start, row_end, N, x_interval, y_interval, max_iter):
     return result
 
 
-def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
+def mandelbrot_dask(N: int, x_interval: tuple[int, int], y_interval: tuple[int, int], max_iter: int=100, n_chunks: int=32) -> np.ndarray:
+    """
+    Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
+
+    Parameters
+    -----------
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    n_chunks : int
+        The number of chunks partition the mandelbrot set into.
+
+    Returns
+    --------
+    mandelbrot_grid : np.ndarray
+        The computed mandelbrot set.
+
+    exec_time : float
+        The amount of time it took to execute.
+    """
     # Ensure that the chunk size is not below 1.
     chunk_size = max(1, N // n_chunks)
     dask_tasks = []
@@ -70,27 +144,131 @@ def mandelbrot_dask(N, x_interval, y_interval, max_iter=100, n_chunks=32):
     return np.vstack(mandelbrot_grid), exec_time
 
 
-def get_n_chunk_list(N):
+def get_n_chunk_list(N: int) -> list[int]:
+    """
+    Gets a list containing different numbers of chunk to be used in a chunk sweep.
+
+    Parameters
+    -----------
+    N : int
+        The resolution of the mandelbrot set.
+
+    Returns
+    --------
+    n_chunks_list : list[int]
+        A list containing the number of chunks from 4 to N, increasing with i**2 each index.
+    """
     n_chunks_list = [2**i for i in range(2, int(math.log2(N) + 1))]
     return n_chunks_list
 
 
-def calculate_LIF(p, Tp, T1):
+def calculate_LIF(p: int, Tp: float, T1: float) -> float:
+    """
+    Calculates the Load Imbalance Factor (LIF).
+
+    Parameters
+    -----------
+    p : int
+        The number of workers/cores.
+
+    Tp : float
+        The time in seconds it took to execute the parallel implementation with p workers/cores.
+
+    Ts : float
+        The runtime in seconds for the serial implementation.
+
+    Returns
+    --------
+    LIF : float
+        The Load Imbalance Factor (LIF).
+    """
     LIF = p * (Tp / T1) - 1
     return LIF
 
 
-def calculate_speedup(Tp, T1):
+def calculate_speedup(Tp: float, T1: float) -> float:
+    """
+    Calculates the speedup.
+
+    Parameters
+    -----------
+    Tp : float
+        The time in seconds it took to execute the parallel implementation with p workers/cores.
+
+    Ts : float
+        The runtime in seconds for the serial implementation.
+
+    Returns
+    --------
+    speedup : float
+        The speedup for the parallel implementation in comparison to the serial one.
+    """
     speedup = T1 / Tp
     return speedup
 
 
-def mandelbrot_serial(N, x_interval, y_interval, max_iter=100):
+def mandelbrot_serial(N: int, x_interval: tuple[int, int], y_interval: tuple[int, int], max_iter: int=100) -> np.ndarray:
+    """
+    Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
+    The serial version.
+
+    Parameters
+    -----------
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    Returns
+    --------
+    mandelbrot_grid : np.ndarray
+        The computed mandelbrot set.
+    """
     return mandelbrot_chunk(0, N, N, x_interval, y_interval, max_iter)
 
 
-def sweep(N, x_interval, y_interval, n_chunks_list, T1, p, max_iter=100, run_count = 3):
+def sweep(N: int, x_interval: tuple[int, int], y_interval: tuple[int, int], n_chunks_list: list[int], T1: float, p: int, max_iter: int=100, run_count: int = 3) -> np.ndarray:
+    """
+    Performs a sweep across number of chunks used. Returns the speedup, LIF and parallel execution time along with the number of chunks used.
 
+    Parameters
+    -----------
+    N : int
+        The resolution of the mandelbrot set.
+
+    x_interval : tuple[float, float]
+        An interval on the real axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    y_interval : tuple[float, float]
+        An interval on the imaginary axis, the first index in the tuple is the lower bound and the second is the upper bound.
+
+    n_chunks_list : list[int]
+        A list containing the number of chunks from 4 to N, increasing with i**2 each index.
+
+    Ts : float
+        The runtime in seconds for the serial implementation.
+
+    p : int
+        The number of workers/cores.
+
+    max_iter : int
+        The maximum number of iterations before escaping
+
+    run_count : int
+        The number of runs to use to find the median of the runtime.
+
+    Returns
+    --------
+    sweep_metrics : np.ndarray
+        An array containing metrics related to the sweep: the number of chunks, the parallel execution time, the speedup and the Load Imbalance Factor (LIF).
+    """
     sweep_number = len(n_chunks_list)
 
     # n_chunks | time (s) | vs 1x | speedup | LIF
@@ -116,7 +294,19 @@ def sweep(N, x_interval, y_interval, n_chunks_list, T1, p, max_iter=100, run_cou
 
 
 def get_cluster_ip(path: str) -> str:
+    """
+    Gets the IP of the cluster from a file.
 
+    Parameters
+    -----------
+    path : str
+        The path to the file containing the cluster up.
+
+    Returns
+    --------
+    cluster_ip : str
+        The IP of the Dask cluster as a string.
+    """
     cluster_ip = ""
 
     # Read cluster ip
