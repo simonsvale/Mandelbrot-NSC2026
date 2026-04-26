@@ -18,7 +18,7 @@ def get_mandelbrot_program(context: cl.Context) -> cl.Program:
     Returns
     --------
     program : cl.Program
-        An OpenCL program that context the mandelbrot pixel kernel for both float32 and float64.
+        An OpenCL program with the mandelbrot pixel kernel for both float32 and float64.
     """
     program = cl.Program(context, """      
     #pragma OPENCL EXTENSION cl_khr_fp64 : enable         
