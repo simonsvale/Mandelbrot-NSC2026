@@ -135,7 +135,7 @@ def _worker(args) -> np.ndarray:
     return mandelbrot_chunk(*args)
 
 
-def mandelbrot_parallel(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int=100, n_workers: int=4, n_chunks: int=32) -> np.ndarray:
+def mandelbrot_parallel(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int=100, n_workers: int=4, n_chunks: int=32) -> tuple[np.ndarray, float]:
     """
     Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
     The serial version.

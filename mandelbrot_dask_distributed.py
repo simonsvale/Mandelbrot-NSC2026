@@ -90,7 +90,7 @@ def mandelbrot_chunk(row_start: int, row_end: int, N: int, x_interval: tuple[flo
     return result
 
 
-def mandelbrot_dask(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int=100, n_chunks: int=32) -> np.ndarray:
+def mandelbrot_dask(N: int, x_interval: tuple[float, float], y_interval: tuple[float, float], max_iter: int=100, n_chunks: int=32) -> tuple[np.ndarray, float]:
     """
     Computes a mandelbrot set using the x and y intervals, maximum number of iterations before escaping and the number of chunks to use.
 
