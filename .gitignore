@@ -15,4 +15,5 @@ mandelbrot_set.png
 julia_set.png
 
 cluster_ip
-.coverage
+.pytest_cache
+.ruff_cache
